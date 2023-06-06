@@ -2,12 +2,12 @@ version: '3'
 services:
   backend:
     build:
-      context: ./backend/backend_deu_project
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./backend/backend_deu_project/Dockerfile
     ports:
       - 8000:8000
     volumes:
-      - ./backend/backend_deu_project:/app/backend
+      - ./:/app/backend
   frontend:
     build:
       context: ./frontend
