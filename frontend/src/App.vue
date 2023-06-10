@@ -1,14 +1,14 @@
 <template>
   <div id="app">
-    <UsersTable />
+    <HelloWorld />
   </div>
 </template>
 <script>
-import UsersTable from './components/Users.vue'
+import HelloWorld from './components/Home/HelloWorld.vue'
 export default {
   name: 'app',
   components: {
-    UsersTable
+    HelloWorld
   }
 }
 </script>
