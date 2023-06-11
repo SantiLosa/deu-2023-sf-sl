@@ -1,24 +1,34 @@
-<template>
-  <div id="app">
-    <HelloWorld />
-  </div>
-</template>
 <script>
-import HelloWorld from './components/Home/HelloWorld.vue'
+import HelloWorld from "./components/Home/HelloWorld.vue"
+import UsersTable from "./components/Users/Users.vue"
+
+const routes = {
+  '/': HelloWorld,
+  '/users': UsersTable
+}
+
 export default {
-  name: 'app',
-  components: {
-    HelloWorld
+  data() {
+    return {
+      currentPath: window.location.hash
+    }
+  },
+  computed: {
+    currentView() {
+      return routes[this.currentPath.slice(1) || '/']
+    }
+  },
+  mounted() {
+    window.addEventListener('hashchange', () => {
+      this.currentPath = window.location.hash
+		})
   }
 }
 </script>
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+
+<template>
+  <a href="#/">Home</a> |
+  <a href="#/users">About</a> |
+  <a href="#/non-existent-path">Broken Link</a>
+  <component :is="currentView" />
+</template>
