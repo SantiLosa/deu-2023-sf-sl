@@ -1,10 +1,12 @@
 <script>
 import HelloWorld from "./components/Home/HelloWorld.vue"
 import UsersTable from "./components/Users/Users.vue"
+import CalendarCompo from "./components/Calendar/Calendar.vue"
 
 const routes = {
   '/': HelloWorld,
-  '/users': UsersTable
+  '/users': UsersTable,
+  '/calendar': CalendarCompo
 }
 
 export default {
@@ -29,6 +31,7 @@ export default {
 <template>
   <a href="#/">Home</a> |
   <a href="#/users">About</a> |
-  <a href="#/non-existent-path">Broken Link</a>
+  <a href="#/non-existent-path">Broken Link</a> |
+  <a href="#/calendar">Calendario</a>
   <component :is="currentView" />
 </template>
