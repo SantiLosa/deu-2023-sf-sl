@@ -1,13 +1,22 @@
 <template>
-    <div class="main">
-        <h3>Ejercicio de Pedro Lopez</h3>
-        <h1>Comienzo: 14/2/2023 a las 14:00</h1>
-        <h2>Tipo de entrenamiento: Fuerza</h2>
-        <h2>Tiempo total: 1 hora, 20 minutos</h2>
-        
+    <div class="container">
+        <div class="row">
+            <h3>Ejercicio de Pedro Lopez</h3>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h3>Tipo de entrenamiento: <span class="badge bg-danger">Fuerza</span></h3>
+            </div>
+            <div class="col">
+                <h3>Tiempo total: 1 hora, 20 minutos</h3>
+            </div>
+            <div class="col">
+                <h3>Comienzo: 14/2/2023 a las 14:00</h3>
+            </div>
+        </div>
     </div>
     <div class="container">
-        <table class="table">
+        <table class="table table-striped">
             <thead>
                 <th scope="col">Duracion segmento</th>
                 <th scope="col">Pulsaciones media</th>
