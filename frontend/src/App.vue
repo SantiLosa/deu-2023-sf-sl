@@ -4,19 +4,22 @@ import UsersTable from "./components/Users/Users.vue"
 import CalendarCompo from "./components/Calendar/Calendar.vue"
 import ViewExercise from "./components/Exercises/ViewExercise.vue"
 import NewExerciseForm from "./components/Exercises/NewExerciseForm.vue"
+import PreferencesForm from "./components/Config/PreferencesForm.vue"
 
 const routes = {
   '/': LogInForm,
   '/users': UsersTable,
   '/calendar': CalendarCompo,
   '/ejercicio/ejemplo': ViewExercise,
-  '/ejercicio/new': NewExerciseForm
+  '/ejercicio/new': NewExerciseForm,
+  '/preferencias': PreferencesForm
 }
 
 export default {
   data() {
     return {
-      currentPath: window.location.hash
+      theme: (this.$cookies.get("theme") != null) ? this.$cookies.get("theme"): "light",
+      currentPath: window.location.hash,
     }
   },
   computed: {
@@ -27,12 +30,17 @@ export default {
   mounted() {
     window.addEventListener('hashchange', () => {
       this.currentPath = window.location.hash
-		})
+		}),
+    document.documentElement.setAttribute(
+      'data-bs-theme', (this.$cookies.get("theme") != null) ? this.$cookies.get("theme"): "light"
+    )
   }
 }
+
 </script>
 
 <template>
+  <!-- <div :style="{'font-size': fontSize}"> -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="">NOMBRE APP</a>
@@ -56,9 +64,13 @@ export default {
                     <li class="nav-item">
                         <a class="nav-link" href="#/ejercicio/new">Test Nuevo Ejercicio</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#/preferencias">Configuracion</a>
+                    </li>
                 </ul>
             </div>
         </div>
   </nav>
   <component :is="currentView" />
+<!-- </div> -->
 </template>
