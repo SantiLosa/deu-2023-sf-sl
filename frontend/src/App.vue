@@ -5,6 +5,7 @@ import CalendarCompo from "./components/Calendar/Calendar.vue"
 import ViewExercise from "./components/Exercises/ViewExercise.vue"
 import NewExerciseForm from "./components/Exercises/NewExerciseForm.vue"
 import PreferencesForm from "./components/Config/PreferencesForm.vue"
+import HomeScreen from "./components/Home/Home.vue"
 
 const routes = {
   '/': LogInForm,
@@ -12,7 +13,8 @@ const routes = {
   '/calendar': CalendarCompo,
   '/ejercicio/ejemplo': ViewExercise,
   '/ejercicio/new': NewExerciseForm,
-  '/preferencias': PreferencesForm
+  '/preferencias': PreferencesForm,
+  '/home': HomeScreen
 }
 
 export default {
@@ -43,14 +45,14 @@ export default {
   <!-- <div :style="{'font-size': fontSize}"> -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="">NOMBRE APP</a>
+            <a class="navbar-brand" href="#/home">NOMBRE APP</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#/">Inicio</a>
+                        <a class="nav-link" href="#/home">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#/users">Alumnos</a>
@@ -66,6 +68,9 @@ export default {
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#/preferencias">Configuracion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#/">Cerrar sesion</a>
                     </li>
                 </ul>
             </div>

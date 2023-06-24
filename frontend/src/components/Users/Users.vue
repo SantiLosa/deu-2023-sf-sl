@@ -8,6 +8,7 @@
             <th scope="col">Name</th>
             <th scope="col">Email</th>
             <th scope="col">City</th>
+            <th scope="col">Exercises</th>
           </tr>
         </thead>
         <tbody>
@@ -16,6 +17,7 @@
             <td>{{user.name}}</td>
             <td>{{user.email}}</td>
             <td>{{user.address.city}}</td>
+            <td><a class="nav-link" href="#/calendar"><button type="button" class="btn btn-primary">Ejercicios</button></a></td>
           </tr>
         </tbody>
       </table> 
