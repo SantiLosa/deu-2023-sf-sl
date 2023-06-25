@@ -42,7 +42,6 @@ export default {
 </script>
 
 <template>
-  <!-- <div :style="{'font-size': fontSize}"> -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="#/home">NOMBRE APP</a>
@@ -52,26 +51,41 @@ export default {
             <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#/home">Inicio</a>
+                        <a class="nav-link" href="#/home">
+                          <i class="icon material-icons">home</i>
+                          Inicio
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#/users">Alumnos</a>
+                        <a class="nav-link" href="#/ejercicio/new">
+                          <i class="icon material-icons">edit</i>
+                          Nuevo Ejercicio
+                        </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#/calendar">Test Calendario</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#/ejercicio/ejemplo">Test Ejercicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#/ejercicio/new">Test Nuevo Ejercicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#/preferencias">Configuracion</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#/">Cerrar sesion</a>
-                    </li>
+                    <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+                      <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="icon material-icons">person</i>
+                            Nombre Usuario
+                          </a>
+                          <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                            <li>
+                              <a class="dropdown-item" href="#/preferencias">
+                                Configuración
+                                <i class="icon material-icons">settings</i>
+                              </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="#/">Cerrar sesión
+                                <i class="icon material-icons">logout</i>
+                              </a>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
                 </ul>
             </div>
         </div>
