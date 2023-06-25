@@ -70,6 +70,7 @@ export default {
 </script>
 <template>
     <vue-cal
+    locale="es"
     :disable-views="['day']"
     :events="events"
     :on-event-click="onEventClick"
