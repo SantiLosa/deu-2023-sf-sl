@@ -1,8 +1,8 @@
 <template>
     <div class="container">
-        <div class="row align-items-center">
+        <div class="row align-items-start">
             <div class="col">
-                <div class="card" style="width: 18rem;">
+                <div class="my-4 card" style="width: 18rem;">
                     <!-- <img src="..." class="card-img-top" alt="..."> -->
                     <div class="card-body">
                         <h5 class="card-title">Listado de Alumnos</h5>
@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="col">
-                <div class="card" style="width: 18rem;">
+                <div class="my-4 card" style="width: 18rem;">
                     <!-- <img src="..." class="card-img-top" alt="..."> -->
                     <div class="card-body">
                         <h5 class="card-title">Rutinas</h5>
