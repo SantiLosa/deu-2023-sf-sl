@@ -50,36 +50,57 @@ export default {
             </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <ul class="navbar-nav ms-auto">
+                  <li class="nav-item">
+                      <a class="nav-link d-flex align-items-center" href="#/home">
+                          <div>
+                              <i class="icon material-icons">home</i>
+                          </div>
+                          <div class="ms-2">
+                              Inicio
+                          </div>
+                      </a>
+                  </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#/home">
-                          <i class="icon material-icons">home</i>
-                          Inicio
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#/ejercicio/new">
-                          <i class="icon material-icons">edit</i>
-                          Nuevo Ejercicio
+                        <a class="nav-link d-flex align-items-center" href="#/ejercicio/new">
+                          <div>
+                            <i class="icon material-icons">edit</i>
+                          </div>
+                          <div class="ms-2">
+                            Nuevo Ejercicio
+                          </div>
                         </a>
                     </li>
                     <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
                       <ul class="navbar-nav">
                         <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="icon material-icons">person</i>
-                            Nombre Usuario
+                          <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div>
+                              <i class="icon material-icons">person</i>
+                            </div>
+                            <div class="ms-2">
+                              Nombre Usuario
+                            </div>
                           </a>
                           <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
                             <li>
-                              <a class="dropdown-item" href="#/preferencias">
-                                Configuración
-                                <i class="icon material-icons">settings</i>
+                              <a class="dropdown-item d-flex align-items-center" href="#/preferencias">
+                                <div>
+                                  Configuración
+                                </div>
+                                <div class="ms-2">
+                                  <i class="icon material-icons">settings</i>
+                                </div>
                               </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="#/">Cerrar sesión
-                                <i class="icon material-icons">logout</i>
+                            <li>
+                              <a class="dropdown-item d-flex align-items-center" href="#/">
+                                <div>
+                                  Cerrar sesión
+                                </div>
+                                <div class="ms-2">
+                                  <i class="icon material-icons">logout</i>
+                                </div>
                               </a>
                             </li>
                           </ul>
