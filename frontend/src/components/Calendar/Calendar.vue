@@ -65,6 +65,25 @@ export default {
             // Redirect to /ejercicio/ejemplo
             window.location.href = '#/ejercicio/new';
         }  
+    },
+    mounted() {
+        setTimeout(() => {
+        const htmlElement = document.querySelector('html')
+        const theme = htmlElement.getAttribute('data-bs-theme')
+
+        if (theme === 'light') {
+            const timeColumnCells = document.querySelectorAll('.vuecal__time-column .vuecal__time-cell')
+            const noEventElements = document.querySelectorAll('.vuecal__no-event')
+
+            Array.from(timeColumnCells).forEach(cell => {
+            cell.style.color = '#020202'
+            })
+
+            Array.from(noEventElements).forEach(element => {
+            element.style.color = '#0c0c0c'
+            })
+        }
+        }, 0)
     }
 }
 </script>
