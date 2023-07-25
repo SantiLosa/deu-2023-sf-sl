@@ -1,6 +1,9 @@
 <template>
     <div class="container">
       <h3>Users:</h3>
+      <div class="mb-3">
+        <input v-model="searchQuery" type="text" class="form-control" placeholder="Busca usuarios...">
+      </div>
       <table class="table">
         <thead>
           <tr>
@@ -12,7 +15,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" v-bind:key="user.id"> 
+          <tr v-for="user in filteredUsers" v-bind:key="user.id"> 
             <th scope="row">{{user.id}}</th>
             <td>{{user.name}}</td>
             <td>{{user.email}}</td>
@@ -23,24 +26,45 @@
       </table> 
     </div> 
   </template>
-    <script>
-    import axios from 'axios';
-    export default {
-    name: 'UsersTable',
-    data() {
-        return {
-        users: null,
-        };
-    },
-    created: function() {
-        axios
-        .get('https://jsonplaceholder.typicode.com/users')
-        .then(res => {
-            this.users = res.data;
-        })
+<script>
+import axios from 'axios';
+export default {
+  name: 'UsersTable',
+  data() {
+    return {
+      users: null,
+      searchQuery: '',
+    };
+  },
+  created() {
+    axios.get('https://jsonplaceholder.typicode.com/users')
+      .then(res => {
+        this.users = res.data;
+      });
+  },
+  computed: {
+    filteredUsers() {
+      if (!this.searchQuery) {
+        return this.users;
+      }
+      const query = this.searchQuery.toLowerCase();
+      return this.users.filter(user => {
+        return (
+          user.id.toString().includes(query) ||
+          user.name.toLowerCase().includes(query) ||
+          user.email.toLowerCase().includes(query) ||
+          user.address.city.toLowerCase().includes(query)
+        );
+      });
     }
+  },
+  watch: {
+    searchQuery() {
+      // When the searchQuery changes, the filteredUsers will be updated automatically.
     }
-    </script>
+  }
+}
+</script>
   <style scoped>
     h3 {
       margin-bottom: 5%;
