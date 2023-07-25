@@ -6,31 +6,35 @@
         </div>
         <form>
             <div class="row">
-                <div class="col left-entry">
+                <div class="col align-self-center left-entry">
                     <fieldset class="border rounded p-2">
                         <legend>Elegir el tipo de ejercicio:</legend>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-                            <label class="form-check-label" for="exampleRadios1">
-                                <span class="badge bg-danger">Fuerza (1)</span>
+                            <input class="form-check-input" type="radio" name="excerciseRadio" id="strenghtRadio" value="strenght" checked>
+                            <label class="form-check-label" for="strenghtRadio">
+                                <span class="badge bg-danger">
+                                    <i class="icon material-icons">fitness_center</i>Fuerza (1)</span>
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-                            <label class="form-check-label" for="exampleRadios2">
-                                <span class="badge bg-success">Cadencia</span>
+                            <input class="form-check-input" type="radio" name="excerciseRadio" id="cadencyRadio" value="cadency">
+                            <label class="form-check-label" for="cadencyRadio">
+                                <span class="badge bg-success">
+                                    <i class="icon material-icons">timer</i>Cadencia</span>
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3">
-                            <label class="form-check-label" for="exampleRadios3">
-                                <span class="badge bg-info black-text">Velocidad</span>
+                            <input class="form-check-input" type="radio" name="excerciseRadio" id="speedRadio" value="speed">
+                            <label class="form-check-label" for="speedRadio">
+                                <span class="badge bg-info black-text">
+                                    <i class="icon material-icons">bolt</i>Velocidad</span>
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios4" value="option4">
-                            <label class="form-check-label" for="exampleRadios4">
-                                <span class="badge bg-warning black-text">Resistencia</span>
+                            <input class="form-check-input" type="radio" name="excerciseRadio" id="resistanceRadio" value="resistance">
+                            <label class="form-check-label" for="resistanceRadio">
+                                <span class="badge bg-warning black-text">
+                                    <i class="icon material-icons">directions_run</i>Resistencia</span>
                             </label>
                         </div>
                     </fieldset>
@@ -100,7 +104,7 @@
   </script>
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
-  <style scoped>
+<style scoped>
     .black-text{
         color:black
     }
@@ -112,4 +116,21 @@
         width: 45%;
         float: right;
     }
-  </style>
+    .form-check-label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    }
+
+    .form-check-label .badge {
+    font-size: 14px;
+    line-height: 1.2;
+    margin-left: 5px;
+    }
+
+    .form-check-label .badge .icon {
+    font-size: 14px;
+    vertical-align: middle;
+    margin-right: 3px;
+    }
+</style>
