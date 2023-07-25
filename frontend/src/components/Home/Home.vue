@@ -17,7 +17,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Rutinas</h5>
                         <p class="card-text">Ver las rutinas pre-cargadas que hay en el sistema hasta ahora, o crear una plantilla de rutina nueva.</p>
-                        <a href="#/home" class="btn btn-warning">Ver rutinas</a>
+                        <a href="#/ejercicio/list" class="btn btn-warning">Ver rutinas</a>
                     </div>
                 </div>
             </div>

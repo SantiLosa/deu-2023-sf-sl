@@ -6,6 +6,7 @@ import ViewExercise from "./components/Exercises/ViewExercise.vue"
 import NewExerciseForm from "./components/Exercises/NewExerciseForm.vue"
 import PreferencesForm from "./components/Config/PreferencesForm.vue"
 import HomeScreen from "./components/Home/Home.vue"
+import ExerciseList from "./components/Exercises/ExerciseList.vue"
 
 const routes = {
   '/': LogInForm,
@@ -13,6 +14,7 @@ const routes = {
   '/calendar': CalendarCompo,
   '/ejercicio/ejemplo': ViewExercise,
   '/ejercicio/new': NewExerciseForm,
+  '/ejercicio/list': ExerciseList,
   '/preferencias': PreferencesForm,
   '/home': HomeScreen
 }

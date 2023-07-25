@@ -41,7 +41,7 @@
     }
     }
     </script>
-  <style>
+  <style scoped>
     h3 {
       margin-bottom: 5%;
     }
