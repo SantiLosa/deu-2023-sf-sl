@@ -48,40 +48,61 @@
                         <label for="descripcionRutina" class="form-label">Descripcion</label>
                         <input type="text" class="form-control" id="descripcionRutina">
                     </div>
+                    <!-- Display the total duration -->
                     <div class="form-group mb-3">
-                        <label for="cantidadTiempoTotal" class="form-label">Cantidad de tiempo total</label>
-                        <input type="text" class="form-control" id="cantidadTiempoTotal" readonly>
+                    <label for="cantidadTiempoTotal" class="form-label">Cantidad de tiempo total</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="cantidadTiempoTotal"
+                        v-model="totalDuration"
+                        readonly
+                    >
                     </div>
                 </div>
             </div>
             <div class="mb-3">
-                <h5>Segmentos</h5>
-                <div class="row row-cols-lg-auto">
-                    <div class="col-12 w-25">
-                        <div class="input-group">
-                            <div class="input-group-text">Duracion: </div>
-                            <input type="number" class="form-control" id="duracionSegmento">
-                            <div class="input-group-text">minutos.</div>
-                        </div>
-                    </div>
-                    <div class="col-12 w-25">
-                        <div class="input-group">
-                            <div class="input-group-text">Pulsaciones por minuto: </div>
-                            <input type="number" class="form-control" id="pulsacionesSegmento">
-                        </div>
-                    </div>
-                    <div class="col-12 w-25">
-                        <div class="input-group">
-                            <div class="input-group-text">Cadencia media: </div>
-                            <input type="number" class="form-control" id="cadenciaSegmento">
-                        </div>
-                    </div>
-                    <div class="col-12 align-self-center">
-                        <button class="btn btn-warning black-text">X</button>
-                    </div>
+            <h5>Segmentos</h5>
+            <!-- Loop through segments and render cards -->
+            <div v-for="(segment, index) in segments" :key="index" class="card mb-3">
+                <div class="card-body">
+                <h6 class="card-title">Segmento {{ index + 1 }}</h6>
+                <p class="card-text">
+                    Duracion: {{ segment.duracion }} minutos,
+                    Pulsaciones por minuto: {{ segment.pulsaciones }},
+                    Cadencia media: {{ segment.cadencia }}
+                </p>
+                <button @click="removeSegment(index)" class="btn btn-danger">Eliminar Segmento</button>
                 </div>
-                <button class="btn btn-info mt-3">Agregar Segmento</button>
             </div>
+
+            <!-- Input fields for adding new segment -->
+            <div class="row row-cols-lg-auto">
+            <div class="col-12 w-25">
+                <div class="input-group">
+                <div class="input-group-text">Duracion: </div>
+                <input v-model="newSegment.duracion" type="number" class="form-control" id="duracionSegmento">
+                <div class="input-group-text">minutos.</div>
+                </div>
+            </div>
+            <div class="col-12 w-25">
+                <div class="input-group">
+                <div class="input-group-text">Pulsaciones por minuto: </div>
+                <input v-model="newSegment.pulsaciones" type="number" class="form-control" id="pulsacionesSegmento">
+                </div>
+            </div>
+            <div class="col-12 w-25">
+                <div class="input-group">
+                <div class="input-group-text">Cadencia media: </div>
+                <input v-model="newSegment.cadencia" type="number" class="form-control" id="cadenciaSegmento">
+                </div>
+            </div>
+            <div class="col-12 align-self-center">
+                <!-- Use :disabled to dynamically enable/disable the button -->
+                <button @click="addSegment" class="btn btn-info mt-3" :disabled="!isFormValid">Agregar Segmento</button>
+            </div>
+            </div>
+        </div>
 
             <div class="row">
                 <div class="col-auto">
@@ -95,14 +116,56 @@
     </div>
 </template>
 <script>
-  export default {
-    name: 'NewExerciseForm',
-    props: {
-      msg: String
+export default {
+  name: 'NewExerciseForm',
+  props: {
+    msg: String
+  },
+  data() {
+    return {
+      segments: [], // Array to store segments
+      newSegment: { // Object to hold data for the new segment
+        duracion: '',
+        pulsaciones: '',
+        cadencia: ''
+      }
+    }
+  },
+  computed: {
+    isFormValid() {
+      // Check if all the required fields have values
+      return (
+        this.newSegment.duracion !== '' &&
+        this.newSegment.pulsaciones !== '' &&
+        this.newSegment.cadencia !== ''
+      );
+    },
+    totalDuration() {
+      // Calculate the total duration by summing up the durations of all segments
+      return this.segments.reduce((total, segment) => total + parseInt(segment.duracion), 0);
+    }
+  },
+  methods: {
+    addSegment() {
+      // Push the new segment data to the segments array
+      this.segments.push({
+        duracion: this.newSegment.duracion,
+        pulsaciones: this.newSegment.pulsaciones,
+        cadencia: this.newSegment.cadencia
+      });
+
+      // Clear the input fields for the next segment
+      this.newSegment.duracion = '';
+      this.newSegment.pulsaciones = '';
+      this.newSegment.cadencia = '';
+    },
+    removeSegment(index) {
+      // Remove the segment from the array based on its index
+      this.segments.splice(index, 1);
     }
   }
-  </script>
-  
+}
+</script>
   <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     .black-text{
