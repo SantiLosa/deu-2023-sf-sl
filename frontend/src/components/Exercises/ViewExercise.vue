@@ -1,7 +1,10 @@
 <template>
     <div class="container">
         <div class="row">
-            <h3>Ejercicio de Pedro Lopez</h3>
+            <h3>Nombre de Ejercicio</h3>
+        </div>
+        <div class="row">
+            <p>Descripcion</p>
         </div>
         <div class="row">
             <div class="col">

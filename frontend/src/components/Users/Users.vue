@@ -8,10 +8,10 @@
         <thead>
           <tr>
             <th scope="col">Id</th>
-            <th scope="col">Name</th>
+            <th scope="col">Nombre</th>
             <th scope="col">Email</th>
-            <th scope="col">City</th>
-            <th scope="col">Exercises</th>
+            <th scope="col">Ciudad</th>
+            <th scope="col">Ejercicios</th>
           </tr>
         </thead>
         <tbody>
@@ -20,7 +20,7 @@
             <td>{{user.name}}</td>
             <td>{{user.email}}</td>
             <td>{{user.address.city}}</td>
-            <td><a class="nav-link" href="#/calendar"><button type="button" class="btn btn-primary">Ejercicios</button></a></td>
+            <td><a class="nav-link" href="#/calendar"><button type="button" class="btn btn-primary">Ver</button></a></td>
           </tr>
         </tbody>
       </table> 

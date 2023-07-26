@@ -13,7 +13,7 @@
                             <input class="form-check-input" type="radio" name="excerciseRadio" id="strenghtRadio" value="strenght" checked>
                             <label class="form-check-label" for="strenghtRadio">
                                 <span class="badge bg-danger">
-                                    <i class="icon material-icons">fitness_center</i>Fuerza (1)</span>
+                                    <i class="icon material-icons">fitness_center</i>Fuerza</span>
                             </label>
                         </div>
                         <div class="form-check">
@@ -46,11 +46,11 @@
                     </div>
                     <div class="form-group mb-3">
                         <label for="descripcionRutina" class="form-label">Descripcion</label>
-                        <input type="text" class="form-control" id="descripcionRutina">
+                        <textarea class="form-control" id="descripcionRutina"></textarea>
                     </div>
                     <!-- Display the total duration -->
-                    <div class="form-group mb-3">
-                    <label for="cantidadTiempoTotal" class="form-label">Cantidad de tiempo total</label>
+                    <div class="input-group mb-3">
+                    <label for="cantidadTiempoTotal" class="input-group-text">Cantidad de tiempo total:</label>
                     <input
                         type="text"
                         class="form-control"
@@ -64,49 +64,59 @@
             <div class="mb-3">
             <h5>Segmentos</h5>
             <!-- Loop through segments and render cards -->
-            <div v-for="(segment, index) in segments" :key="index" class="card mb-3">
-                <div class="card-body">
-                <h6 class="card-title">Segmento {{ index + 1 }}</h6>
-                <p class="card-text">
-                    Duracion: {{ segment.duracion }} minutos,
-                    Pulsaciones por minuto: {{ segment.pulsaciones }},
-                    Cadencia media: {{ segment.cadencia }}
-                </p>
-                <button @click="removeSegment(index)" class="btn btn-danger">Eliminar Segmento</button>
-                </div>
-            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Orden</th>
+                        <th scope="col">Duracion</th>
+                        <th scope="col">Pulsaciones esperadas</th>
+                        <th scope="col">Cadencia media esperada</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(segment, index) in segments" :key="index">
+                        <th scope="row">{{ index + 1 }}</th>
+                        <td>{{ segment.duracion }} minutos</td>
+                        <td>{{ segment.pulsaciones }} por minuto</td>
+                        <td>{{ segment.cadencia }} RPM</td>
+                        <td><button @click="removeSegment(index)" class="btn btn-warning align-self-center" style="float:right"><b>X</b></button></td>
+                    </tr>
+                </tbody>
+            </table>
+            
 
             <!-- Input fields for adding new segment -->
             <div class="row row-cols-lg-auto">
-            <div class="col-12 w-25">
-                <div class="input-group">
-                <div class="input-group-text">Duracion: </div>
-                <input v-model="newSegment.duracion" type="number" class="form-control" id="duracionSegmento">
-                <div class="input-group-text">minutos.</div>
+                <div class="col-12 w-25">
+                    <div class="input-group">
+                    <div class="input-group-text">Duracion: </div>
+                    <input v-model="newSegment.duracion" type="number" class="form-control" id="duracionSegmento">
+                    <div class="input-group-text">minutos.</div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-12 w-25">
-                <div class="input-group">
-                <div class="input-group-text">Pulsaciones por minuto: </div>
-                <input v-model="newSegment.pulsaciones" type="number" class="form-control" id="pulsacionesSegmento">
+                <div class="col-12 w-25">
+                    <div class="input-group">
+                    <div class="input-group-text">Pulsaciones por minuto: </div>
+                    <input v-model="newSegment.pulsaciones" type="number" class="form-control" id="pulsacionesSegmento">
+                    </div>
                 </div>
-            </div>
-            <div class="col-12 w-25">
-                <div class="input-group">
-                <div class="input-group-text">Cadencia media: </div>
-                <input v-model="newSegment.cadencia" type="number" class="form-control" id="cadenciaSegmento">
+                <div class="col-12 w-25">
+                    <div class="input-group">
+                    <div class="input-group-text">Cadencia media: </div>
+                    <input v-model="newSegment.cadencia" type="number" class="form-control" id="cadenciaSegmento">
+                    <div class="input-group-text">RPM</div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-12 align-self-center">
-                <!-- Use :disabled to dynamically enable/disable the button -->
-                <button @click="addSegment" class="btn btn-info mt-3" :disabled="!isFormValid">Agregar Segmento</button>
-            </div>
+                <div class="col-12">
+                    <!-- Use :disabled to dynamically enable/disable the button -->
+                    <button @click="addSegment" class="btn btn-info" :disabled="!isFormValid">Agregar Segmento</button>
+                </div>
             </div>
         </div>
-
             <div class="row">
                 <div class="col-auto">
-                    <button type="submit" class="btn btn-primary">Confirmar</button>
+                    <button type="submit" @click="success" class="btn btn-primary" :disabled="(totalDuration<=0)">Confirmar</button>
                 </div>
                 <div class="col">
                     <button type="cancel" class="btn btn-danger">Cancelar</button>
@@ -137,7 +147,10 @@ export default {
       return (
         this.newSegment.duracion !== '' &&
         this.newSegment.pulsaciones !== '' &&
-        this.newSegment.cadencia !== ''
+        this.newSegment.cadencia !== '' &&
+        this.newSegment.duracion > 0 &&
+        this.newSegment.pulsaciones > 0 &&
+        this.newSegment.cadencia > 0
       );
     },
     totalDuration() {
@@ -162,6 +175,9 @@ export default {
     removeSegment(index) {
       // Remove the segment from the array based on its index
       this.segments.splice(index, 1);
+    },
+    success() {
+        alert("Rutina nueva creada con exito")
     }
   }
 }

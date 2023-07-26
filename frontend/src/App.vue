@@ -62,6 +62,7 @@ export default {
                           </div>
                       </a>
                   </li>
+                  <!--
                     <li class="nav-item">
                         <a class="nav-link d-flex align-items-center" href="#/ejercicio/new">
                           <div>
@@ -72,6 +73,7 @@ export default {
                           </div>
                         </a>
                     </li>
+                    -->
                     <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
                       <ul class="navbar-nav">
                         <li class="nav-item dropdown">

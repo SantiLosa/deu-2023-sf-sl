@@ -12,7 +12,7 @@
                         <div id="emailHelp" class="form-text">Nunca compartiremos tu Email con nadie mas.</div>
                     </div>
                     <div class="mb-3">
-                        <label for="passwordField" class="form-label">Password</label>
+                        <label for="passwordField" class="form-label">Contraseña</label>
                         <input type="password" class="form-control" id="passwordField">
                     </div>
                     <div class="mb-3 form-check">
