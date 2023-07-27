@@ -23,7 +23,24 @@ export default {
   data() {
     return {
       theme: (this.$cookies.get("theme") != null) ? this.$cookies.get("theme"): "light",
+      loggedIn: false, //only for prototype
       currentPath: window.location.hash,
+    }
+  },
+  methods: {
+    logOut() {
+      this.$cookies.set("loggedIn", false)
+      this.loggedIn = false // only for prototype
+    },
+    checkCredentials(){ //only for prototype
+      var loggedIn = (this.$cookies.get("loggedIn") != null) ? this.$cookies.get("loggedIn"): "false"
+      this.loggedIn = (loggedIn == "true") //turns string "true" into boolean true and string "false" into boolean false
+      if (this.currentPath == "#/" && loggedIn == "true") {
+        window.location.href = "#/home"
+      }
+      else if (this.currentPath != "#/" && loggedIn == "false") {
+        window.location.href = "#/"
+      }
     }
   },
   computed: {
@@ -34,17 +51,19 @@ export default {
   mounted() {
     window.addEventListener('hashchange', () => {
       this.currentPath = window.location.hash
+      this.checkCredentials()
 		}),
     document.documentElement.setAttribute(
       'data-bs-theme', (this.$cookies.get("theme") != null) ? this.$cookies.get("theme"): "light"
-    )
+    ),
+    this.checkCredentials()
   }
 }
 
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav v-if="loggedIn" class="navbar navbar-expand-lg navbar-dark bg-dark"> <!--este v-if esconde la nav-bar si no estas loggeado-->
         <div class="container">
             <a class="navbar-brand" href="#/home">NOMBRE APP</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +101,7 @@ export default {
                               <i class="icon material-icons">person</i>
                             </div>
                             <div class="ms-2">
-                              Nombre Usuario
+                              Profesor
                             </div>
                           </a>
                           <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
@@ -98,7 +117,7 @@ export default {
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                              <a class="dropdown-item d-flex align-items-center" href="#/">
+                              <a @click="logOut" class="dropdown-item d-flex align-items-center" href="#/">
                                 <div>
                                   Cerrar sesión
                                 </div>
