@@ -1,7 +1,6 @@
 <script>
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
-
 export default {
     name: 'CalendarCompo',
     components: { VueCal },
@@ -44,27 +43,178 @@ export default {
                     title: '<i class="icon material-icons">bolt</i> Entrenamiento de velocidad', // Optional.
                     class: 'speed'
                 },
-            ]
+            ],
+            presetExercises: [
+                { 
+                    class: 'speed',
+                    name: 'Entrenamiento 1',
+                    title: '<i class="icon material-icons">bolt</i> Entrenamiento 1',
+                    duration: 10
+                },
+                {
+                    class: 'resistance',
+                    name: 'Entrenamiento 2',
+                    title: '<i class="icon material-icons">directions_run</i> Entrenamiento 2', 
+                    duration: 5
+                },
+                {
+                    class: 'strength',
+                    name: 'Entrenamiento 3',
+                    title: '<i class="icon material-icons">fitness_center</i> Entrenamiento 3', // Optional.
+                    duration: 6
+                },
+                {
+                    class: 'strength',
+                    name: 'Entrenamiento 4',
+                    title: '<i class="icon material-icons">fitness_center</i> Entrenamiento 4', // Optional.
+                    duration: 8
+                },
+                {
+                    class: 'strength',
+                    name: 'Entrenamiento 5',
+                    title: '<i class="icon material-icons">fitness_center</i> Entrenamiento 5', // Optional.
+                    duration: 2
+                },
+                // Add more preset exercises as needed...
+            ],
+            showDialog: false,
+            startTime: '',
+            selectedPresetExercise: null,
+            searchTitle: '',
+            filteredPresetExercises: [],
         }
     },
-    methods: {
-        onEventClick (event, e) {
-            this.selectedEvent = event
-            this.showDialog = true
-
-            // Redirect to /ejercicio/ejemplo
-            window.location.href = '#/ejercicio/ejemplo';
-
-            // Prevent navigating to narrower view (default vue-cal behavior).
-            e.stopPropagation()
+    computed: {
+    // Filter the preset exercises based on the searchTitle input
+    computedFilteredPresetExercises() {
+        return this.presetExercises.filter((exercise) => {
+            return exercise.title.toLowerCase().includes(this.searchTitle.toLowerCase());
+        });
         },
-        toTrainingForm (event) {
-            this.selectedEvent = event
-            this.showDialog = true
+    },
+    methods: {
+        filterPresetExercises() {
+            // No need to do anything here. The computed property "filteredPresetExercises" handles the filtering.
+        },
+        onEventClick(event, e) {
+            this.selectedEvent = event;
+            this.showDialog = true;
+            e.stopPropagation();
+        },
+        showPresetExercises(event) {
+            // Get the clicked cell from the event object
+            const clickedCell = event.cell;
+            // Handle the double-click event to show the preset exercises dialog.
+            this.showDialog = true;
 
-            // Redirect to /ejercicio/ejemplo
-            window.location.href = '#/ejercicio/new';
-        }  
+            // Get the mouse click position
+            const clickX = event.clientX;
+            const clickY = event.clientY;
+            this.filteredPresetExercises = this.computedFilteredPresetExercises;
+
+            // Get the scroll position
+            const scrollX = window.scrollX || window.pageXOffset;
+            const scrollY = window.scrollY || window.pageYOffset;
+
+            // Set the position of the dialog based on the mouse click position and scroll position
+            const dialogElement = document.querySelector('.preset-exercises-dialog');
+            dialogElement.style.left = `${clickX + scrollX}px`;
+            dialogElement.style.top = `${clickY + scrollY}px`;
+
+            // Set the start time input to the clicked cell time
+            if (clickedCell && clickedCell.startDate) {
+                const clickedDate = new Date(clickedCell.startDate); // Extract the start date from the clicked cell object
+                const hour = clickedDate.getHours().toString().padStart(2, '0'); // Get the hours (formatted with leading zeros)
+                const minutes = clickedDate.getMinutes().toString().padStart(2, '0'); // Get the minutes (formatted with leading zeros)
+                this.startTime = `${hour}:${minutes}`; // Set the start time input value
+            } else {
+                // The cell object or startDate property is missing
+                console.log("Cell or startDate property is missing.");
+            }
+        },
+        onCellDblClick(clickedCell) {
+            console.log(clickedCell); // Log the clicked cell object for debugging purposes
+
+            if (clickedCell && clickedCell.startDate) {
+                // The cell object exists and has a valid startDate property, proceed with toTrainingForm
+                this.toTrainingForm(clickedCell);
+            } else {
+                // The cell object or startDate property is missing
+                console.log("Cell or startDate property is missing.");
+            }
+        },
+        toTrainingForm(clickedCell) {
+            // Get the startDate from the clicked cell object
+            console.log("CLIKED CELL",clickedCell)
+            const clickedDate = new Date(clickedCell)
+            const hour = clickedDate.getHours()
+            console.log("start_hour", hour)
+
+            this.showDialog = true;
+            this.clickedDate = clickedDate;
+        },
+        addPresetExercise(presetExercise) {
+            if (this.showDialog && this.clickedDate && this.startTime) {
+                const currentDate = new Date(this.clickedDate);
+                const selectedTime = this.startTime.split(':');
+                currentDate.setHours(parseInt(selectedTime[0], 10));
+                currentDate.setMinutes(parseInt(selectedTime[1], 10));
+
+                const endTime = new Date(currentDate);
+                endTime.setHours(currentDate.getHours() + 2);
+
+                const newEvent = {
+                    start: currentDate,
+                    end: endTime,
+                    title: presetExercise.title,
+                    class: presetExercise.class,
+                };
+
+                this.events.push(newEvent);
+            }
+
+            this.showDialog = false;
+            this.clickedDate = null;
+            this.startTime = ''; // Reset the selected start time
+        },
+        closeDialog() {
+            // Close the dialog.
+            this.showDialog = false;
+
+            // Clear the clickedDate and startTime data properties
+            this.clickedDate = null;
+            this.startTime = '';
+
+            // Reset the selected preset exercise and clear the searchTitle
+            this.selectedPresetExercise = null;
+            this.searchTitle = '';
+            this.filteredPresetExercises = []; // Clear the filtered list
+        },
+        confirmSelection() {
+            if (this.showDialog && this.clickedDate && this.startTime && this.selectedPresetExercise) {
+                const currentDate = new Date(this.clickedDate);
+                const selectedTime = this.startTime.split(':');
+                currentDate.setHours(parseInt(selectedTime[0], 10));
+                currentDate.setMinutes(parseInt(selectedTime[1], 10));
+
+                const endTime = new Date(currentDate);
+                endTime.setHours(currentDate.getHours() + this.selectedPresetExercise.duration); // Use duration attribute
+
+                const newEvent = {
+                    start: currentDate,
+                    end: endTime,
+                    title: this.selectedPresetExercise.title,
+                    class: this.selectedPresetExercise.class,
+                };
+
+                this.events.push(newEvent);
+            }
+
+            this.showDialog = false;
+            this.clickedDate = null;
+            this.startTime = ''; // Reset the selected start time
+            this.selectedPresetExercise = null; // Reset the selected preset exercise
+    },
     },
     mounted() {
         setTimeout(() => {
@@ -89,12 +239,48 @@ export default {
 </script>
 <template>
     <div class="container">
-        <vue-cal
+      <vue-cal
         locale="es"
         :disable-views="['day']"
         :events="events"
         :on-event-click="onEventClick"
-        @cell-dblclick="toTrainingForm($event)" />
+        @cell-dblclick="toTrainingForm($event)"
+        @dblclick="showPresetExercises($event)"
+      />
+  
+      <!-- Preset Exercises Dialog -->
+      <div v-if="showDialog" class="preset-exercises-dialog card">
+        <div class="card-body">
+          <h3 class="card-title">Select a Preset Exercise Routine</h3>
+          
+          <!-- Search by title filter -->
+          <div class="mb-3">
+            <label for="searchTitle">Search by Title:</label>
+            <input type="text" id="searchTitle" v-model="searchTitle" @input="filterPresetExercises" />
+          </div>
+  
+        <!-- Scrollable list with radio buttons for preset exercises -->
+        <div class="scrollable-list">
+        <label v-for="exercise in computedFilteredPresetExercises" :key="exercise.class">
+            <input type="radio" v-model="selectedPresetExercise" :value="exercise" />
+            <span v-html="exercise.title"></span>
+            <span>Duration: {{ exercise.duration }} hours</span>
+        </label>
+        </div>
+  
+          <!-- Input form to set the start time for the selected preset event -->
+          <div v-if="clickedDate">
+            <label for="startTime">Start Time:</label>
+            <input type="time" id="startTime" v-model="startTime" />
+          </div>
+  
+          <!-- Add the "Aceptar" button to confirm the selection -->
+          <div class="button-group">
+            <button class="btn btn-primary" @click="confirmSelection">Aceptar</button>
+            <button class="btn btn-secondary" @click="closeDialog">Cancel</button>
+          </div>
+        </div>
+      </div>
     </div>
 </template>
 <style>
@@ -103,4 +289,16 @@ export default {
 .vuecal__event.strength {background-color: rgba(220, 53, 69);border: 1px solid rgb(235, 82, 82);color: #fff;}
 .vuecal__event.cadency {background-color: rgba(25, 135, 84);border: 1px solid rgb(235, 82, 82);color: #fff;}
 .vuecal__event.resistance {background-color: rgba(255, 193, 7);border: 1px solid rgb(235, 82, 82);color: #000000;}
+/* Set a higher z-index to make the dialog appear above other elements */
+.preset-exercises-dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  z-index: 9999; /* Adjust the value as needed */
+}
 </style>
