@@ -12,28 +12,28 @@
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="excerciseRadio" id="strenghtRadio" value="strenght" checked>
                             <label class="form-check-label" for="strenghtRadio">
-                                <span class="badge bg-danger">
+                                <span class="badge text-bg-danger">
                                     <i class="icon material-icons">fitness_center</i>Fuerza</span>
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="excerciseRadio" id="cadencyRadio" value="cadency">
                             <label class="form-check-label" for="cadencyRadio">
-                                <span class="badge bg-success">
+                                <span class="badge text-bg-success">
                                     <i class="icon material-icons">timer</i>Cadencia</span>
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="excerciseRadio" id="speedRadio" value="speed">
                             <label class="form-check-label" for="speedRadio">
-                                <span class="badge bg-info black-text">
+                                <span class="badge text-bg-info">
                                     <i class="icon material-icons">bolt</i>Velocidad</span>
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="excerciseRadio" id="resistanceRadio" value="resistance">
                             <label class="form-check-label" for="resistanceRadio">
-                                <span class="badge bg-warning black-text">
+                                <span class="badge text-bg-warning">
                                     <i class="icon material-icons">directions_run</i>Resistencia</span>
                             </label>
                         </div>
@@ -184,9 +184,6 @@ export default {
 </script>
   <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-    .black-text{
-        color:black
-    }
     .left-entry{
         width: 45%;
         float: left;
