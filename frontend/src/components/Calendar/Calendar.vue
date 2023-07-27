@@ -102,8 +102,6 @@ export default {
             e.stopPropagation();
         },
         showPresetExercises(event) {
-            // Get the clicked cell from the event object
-            const clickedCell = event.cell;
             // Handle the double-click event to show the preset exercises dialog.
             this.showDialog = true;
 
@@ -120,17 +118,11 @@ export default {
             const dialogElement = document.querySelector('.preset-exercises-dialog');
             dialogElement.style.left = `${clickX + scrollX}px`;
             dialogElement.style.top = `${clickY + scrollY}px`;
-
+            console.log("AAAAA",this.clickedDate)
             // Set the start time input to the clicked cell time
-            if (clickedCell && clickedCell.startDate) {
-                const clickedDate = new Date(clickedCell.startDate); // Extract the start date from the clicked cell object
-                const hour = clickedDate.getHours().toString().padStart(2, '0'); // Get the hours (formatted with leading zeros)
-                const minutes = clickedDate.getMinutes().toString().padStart(2, '0'); // Get the minutes (formatted with leading zeros)
-                this.startTime = `${hour}:${minutes}`; // Set the start time input value
-            } else {
-                // The cell object or startDate property is missing
-                console.log("Cell or startDate property is missing.");
-            }
+            const hour = this.clickedDate.getHours().toString().padStart(2, '0'); // Get the hours (formatted with leading zeros)
+            const minutes = this.clickedDate.getMinutes().toString().padStart(2, '0'); // Get the minutes (formatted with leading zeros)
+            this.startTime = `${hour}:${minutes}`; // Set the start time input value
         },
         onCellDblClick(clickedCell) {
             console.log(clickedCell); // Log the clicked cell object for debugging purposes
@@ -140,7 +132,7 @@ export default {
                 this.toTrainingForm(clickedCell);
             } else {
                 // The cell object or startDate property is missing
-                console.log("Cell or startDate property is missing.");
+                console.log(" ondouble clik Cell or startDate property is missing.");
             }
         },
         toTrainingForm(clickedCell) {
