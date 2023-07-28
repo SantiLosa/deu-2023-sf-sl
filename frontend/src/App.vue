@@ -35,7 +35,7 @@ export default {
     checkCredentials(){ //only for prototype
       var loggedIn = (this.$cookies.get("loggedIn") != null) ? this.$cookies.get("loggedIn"): "false"
       this.loggedIn = (loggedIn == "true") //turns string "true" into boolean true and string "false" into boolean false
-      if (this.currentPath == "#/" && loggedIn == "true") {
+      if ((this.currentPath == "#/" || this.currentPath == "") && loggedIn == "true") {
         window.location.href = "#/home"
       }
       else if (this.currentPath != "#/" && loggedIn == "false") {
