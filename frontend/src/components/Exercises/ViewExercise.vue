@@ -1,10 +1,10 @@
 <template>
     <div class="container">
         <div class="row">
-            <h3>Nombre de Ejercicio</h3>
+            <h3>Bici dura con pausas</h3>
         </div>
         <div class="row">
-            <p>Descripcion</p>
+            <p>Alternar entre cadencia baja con bici dura y cadencia alta con bici floja.</p>
         </div>
         <div class="row">
             <div class="col">
@@ -29,17 +29,22 @@
                 <tr>
                     <td>20 minutos</td>
                     <td>120</td>
-                    <td>40</td>
+                    <td>50</td>
                 </tr>
                 <tr>
-                    <td>40 minutos</td>
-                    <td>150</td>
-                    <td>60</td>
+                    <td>20 minutos</td>
+                    <td>180</td>
+                    <td>30</td>
                 </tr>
                 <tr>
                     <td>20 minutos</td>
                     <td>120</td>
-                    <td>40</td>
+                    <td>50</td>
+                </tr>
+                <tr>
+                    <td>20 minutos</td>
+                    <td>180</td>
+                    <td>30</td>
                 </tr>
             </tbody>
         </table>
