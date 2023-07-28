@@ -326,6 +326,11 @@ export default {
 .vuecal__event.strength {background-color: rgba(220, 53, 69);border: 1px solid rgb(235, 82, 82);color: #fff;}
 .vuecal__event.cadency {background-color: rgba(25, 135, 84);border: 1px solid rgb(235, 82, 82);color: #fff;}
 .vuecal__event.resistance {background-color: rgba(255, 193, 7);border: 1px solid rgb(235, 82, 82);color: #000000;}
+.vuecal__cell:hover {
+  background-color: rgba(33, 129, 184, 0.3); /* Change the color to your preferred highlight color */
+  box-shadow: 0 5px 15px rgba(145, 92, 182, .4); 
+  cursor: pointer; /* Set the cursor to a pointer to indicate it's clickable */
+}
 /* Set a higher z-index to make the dialog appear above other elements */
 .preset-exercises-dialog {
   position: absolute;
