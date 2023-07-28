@@ -82,6 +82,8 @@ export default {
             selectedPresetExercise: null,
             searchTitle: '',
             filteredPresetExercises: [],
+            showEventDetailsModal: false,
+            selectedEvent: null,
         }
     },
     computed: {
@@ -97,9 +99,29 @@ export default {
             // No need to do anything here. The computed property "filteredPresetExercises" handles the filtering.
         },
         onEventClick(event, e) {
+            // Show the event details modal
             this.selectedEvent = event;
-            this.showDialog = true;
+            this.showEventDetailsModal = true;
             e.stopPropagation();
+        },
+        closeEventDetailsModal() {
+            // Close the event details modal
+            this.showEventDetailsModal = false;
+            this.selectedEvent = null;
+        },
+        deleteEvent() {
+            // Delete the selected event from the events list
+            const index = this.events.findIndex(
+                (event) =>
+                event.name === this.selectedEvent.name &&
+                event.start === this.selectedEvent.start &&
+                event.end === this.selectedEvent.end
+            );
+            if (index !== -1) {
+                this.events.splice(index, 1);
+            }
+
+            this.closeEventDetailsModal(); // Close the modal after deleting the event
         },
         showPresetExercises(event) {
             // Handle the double-click event to show the preset exercises dialog.
@@ -231,26 +253,26 @@ export default {
 </script>
 <template>
     <div class="container">
-      <vue-cal
+        <vue-cal
         locale="es"
         :disable-views="['day']"
         :events="events"
         :on-event-click="onEventClick"
         @cell-dblclick="toTrainingForm($event)"
         @dblclick="showPresetExercises($event)"
-      />
+        />
   
-      <!-- Preset Exercises Dialog -->
-      <div v-if="showDialog" class="preset-exercises-dialog card">
+        <!-- Preset Exercises Dialog -->
+        <div v-if="showDialog" class="preset-exercises-dialog card">
         <div class="card-body">
-          <h3 class="card-title">Select a Preset Exercise Routine</h3>
-          
-          <!-- Search by title filter -->
-          <div class="mb-3">
+            <h3 class="card-title">Select a Preset Exercise Routine</h3>
+            
+            <!-- Search by title filter -->
+            <div class="mb-3">
             <label for="searchTitle">Search by Title:</label>
             <input type="text" id="searchTitle" v-model="searchTitle" @input="filterPresetExercises" />
-          </div>
-  
+            </div>
+
         <!-- Scrollable list with radio buttons for preset exercises -->
         <div class="scrollable-list">
         <label v-for="exercise in computedFilteredPresetExercises" :key="exercise.class">
@@ -259,20 +281,43 @@ export default {
             <span>Duration: {{ exercise.duration }} hours</span>
         </label>
         </div>
-  
-          <!-- Input form to set the start time for the selected preset event -->
-          <div v-if="clickedDate">
+
+            <!-- Input form to set the start time for the selected preset event -->
+            <div v-if="clickedDate">
             <label for="startTime">Start Time:</label>
             <input type="time" id="startTime" v-model="startTime" />
-          </div>
-  
-          <!-- Add the "Aceptar" button to confirm the selection -->
-          <div class="button-group">
+            </div>
+
+            <!-- Add the "Aceptar" button to confirm the selection -->
+            <div class="button-group">
             <button class="btn btn-primary" @click="confirmSelection">Aceptar</button>
             <button class="btn btn-secondary" @click="closeDialog">Cancel</button>
-          </div>
+            </div>
         </div>
-      </div>
+        </div>
+        <!-- Event Details Dialog -->
+        <div v-if="showEventDetailsModal" class="modal fade show" style="display: block;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ selectedEvent.name }}</h5>
+                        <button type="button" class="btn-close" @click="closeEventDetailsModal"></button>
+                    </div>
+                <div class="modal-body">
+                    <p>Start: {{ selectedEvent.start }}</p>
+                    <p>End: {{ selectedEvent.end }}</p>
+                </div>
+                <div class="modal-footer">
+                    <!-- Remove passing of eventId to deleteEvent -->
+                    <button class="btn btn-danger" @click="deleteEvent">Delete Event</button>
+                    <router-link :to="{ name: 'ViewEvent', params: { eventId: selectedEvent.id } }">
+                        <button class="btn btn-primary">View Event</button>
+                    </router-link>
+                    <button class="btn btn-secondary" @click="closeEventDetailsModal">Cancel</button>
+                </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <style>
