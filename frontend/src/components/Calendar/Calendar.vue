@@ -45,37 +45,186 @@ export default {
                 },
             ],
             presetExercises: [
-                { 
+                {
+                    id: 1,
                     class: 'speed',
-                    name: 'Entrenamiento 1',
-                    title: '<i class="icon material-icons">bolt</i> Entrenamiento 1',
-                    duration: 10
+                    exerciseType: 'Velocidad',
+                    name: 'Velocidad Ligero',
+                    description: 'Entrenamiento enfocado en velocidad para principiantes',
+                    duration: 60, //minutos
+                    title: '<i class="icon material-icons">bolt</i> Velocidad Ligero'
                 },
                 {
+                    id: 2,
                     class: 'resistance',
-                    name: 'Entrenamiento 2',
-                    title: '<i class="icon material-icons">directions_run</i> Entrenamiento 2', 
-                    duration: 5
+                    exerciseType: 'Resistencia',
+                    name: 'Resistencia Ligero',
+                    description: 'Entrenamiento enfocado en resistencia para principiantes',
+                    duration: 90, //minutos
+                    title: '<i class="icon material-icons">directions_run</i> Resistencia Ligero'
                 },
                 {
-                    class: 'strength',
-                    name: 'Entrenamiento 3',
-                    title: '<i class="icon material-icons">fitness_center</i> Entrenamiento 3', // Optional.
-                    duration: 6
+                    id: 3,
+                    class: 'cadency',
+                    exerciseType: 'Cadencia',
+                    name: 'Cadencia Ligero',
+                    description: 'Entrenamiento enfocado en cadencia para principiantes',
+                    duration: 60, //minutos
+                    title: '<i class="icon material-icons">timer</i> Cadencia Ligero'
                 },
                 {
+                    id: 4,
                     class: 'strength',
-                    name: 'Entrenamiento 4',
-                    title: '<i class="icon material-icons">fitness_center</i> Entrenamiento 4', // Optional.
-                    duration: 8
+                    exerciseType: 'Fuerza',
+                    name: 'Fuerza Ligero',
+                    description: 'Entrenamiento enfocado en fuerza para principiantes',
+                    duration: 30, //minutos
+                    title: '<i class="icon material-icons">fitness_center</i> Fuerza Ligero'
                 },
                 {
+                    id: 5,
                     class: 'strength',
-                    name: 'Entrenamiento 5',
-                    title: '<i class="icon material-icons">fitness_center</i> Entrenamiento 5', // Optional.
-                    duration: 2
+                    exerciseType: 'Fuerza',
+                    name: 'Fuerza Intenso',
+                    description: 'Entrenamiento colina arriba para practicar fuerza. No apto para principiantes',
+                    duration: 45,
+                    title: '<i class="icon material-icons">fitness_center</i> Fuerza Intenso'
                 },
-                // Add more preset exercises as needed...
+                {
+                    id: 6,
+                    class: 'strength',
+                    exerciseType: 'Fuerza',
+                    name: 'Fuerza Intenso con Pausa',
+                    description: 'Similar a Fuerza Intenso pero con pausas mas largas entre segmentos',
+                    duration: 65,
+                    title: '<i class="icon material-icons">fitness_center</i> Fuerza Intenso con Pausa'
+                },
+                {
+                    id: 7,
+                    class: 'resistance',
+                    exerciseType: 'Resistencia',
+                    name: 'Tour de France',
+                    description: 'Entrenamiento extremo de aguante',
+                    duration: 430,
+                    title: '<i class="icon material-icons">directions_run</i> Tour de France'
+                },
+                {
+                    id: 8,
+                    class: 'resistance',
+                    exerciseType: 'Resistencia',
+                    name: 'Vuelta al Mundo',
+                    description: 'Recorrido por todo el cuadrado de la plata',
+                    duration: 300,
+                    title: '<i class="icon material-icons">directions_run</i> Vuelta al Mundo'
+                },
+                {
+                    id: 9,
+                    class: 'speed',
+                    exerciseType: 'Velocidad',
+                    name: 'Carrera Alterna',
+                    description: 'Camino por el bosque a máxima velocidad',
+                    duration: 40,
+                    title: '<i class="icon material-icons">bolt</i> Carrera Alterna'
+                },
+                {
+                    id: 10,
+                    class: 'cadency',
+                    exerciseType: 'Cadencia',
+                    name: 'Bici Fija RPM',
+                    description: '20 minutos de calentamiento, ejercicio, 20 minutos para bajar.',
+                    duration: 180,
+                    title: '<i class="icon material-icons">timer</i> Bici Fija RPM'
+                },
+                {
+                    id: 11,
+                    class: 'strength',
+                    exerciseType: 'Fuerza',
+                    name: 'Bici en Cambio Duro',
+                    description: '10 minutos de calentamiento en configuración tranquila, luego cambio a duro sin parar',
+                    duration: 40,
+                    title: '<i class="icon material-icons">fitness_center</i> Bici en Cambio Duro'
+                },
+                {
+                    id: 12,
+                    class: 'speed',
+                    exerciseType: 'Velocidad',
+                    name: 'Flash Special',
+                    description: 'Ejercicio para intentar empujar la velocidad máxima del ciclista',
+                    duration: 90,
+                    title: '<i class="icon material-icons">bolt</i> Flash Special'
+                },
+                {
+                    id: 13,
+                    class: 'resistance',
+                    exerciseType: 'Resistencia',
+                    name: 'Aguante en Alta Cadencia',
+                    description: 'Mantener una cadencia decente durante mucho tiempo en bici fija, con pausas',
+                    duration: 180,
+                    title: '<i class="icon material-icons">directions_run</i> Aguante en Alta Cadencia'
+                },
+                {
+                    id: 14,
+                    class: 'strength',
+                    exerciseType: 'Fuerza',
+                    name: 'Resistencia',
+                    description: 'Resistencia mediana',
+                    duration: 30,
+                    title: '<i class="icon material-icons">fitness_center</i> Resistencia'
+                },
+                {
+                    id: 15,
+                    class: 'cadency',
+                    exerciseType: 'Cadencia',
+                    name: 'Calentamiento',
+                    description: 'Unos minutos de cadencia media para calentar',
+                    duration: 20,
+                    title: '<i class="icon material-icons">timer</i> Calentamiento'
+                },
+                {
+                    id: 16,
+                    class: 'strength',
+                    exerciseType: 'Fuerza',
+                    name: 'Bici Dura con Pausas',
+                    description: 'Alternar entre cadencia baja con bici dura y cadencia alta con bici floja.',
+                    duration: 80,
+                    title: '<i class="icon material-icons">fitness_center</i> Bici Dura con Pausas'
+                },
+                {
+                    id: 17,
+                    class: 'strength',
+                    exerciseType: 'Fuerza',
+                    name: 'Michelin Special',
+                    description: 'En bicicleta con rueda atada atrás.',
+                    duration: 60,
+                    title: '<i class="icon material-icons">fitness_center</i> Michelin Special'
+                },
+                {
+                    id: 18,
+                    class: 'speed',
+                    exerciseType: 'Velocidad',
+                    name: 'Cardio Básico',
+                    description: 'Ejercicio de velocidad alta para entrenar cardio',
+                    duration: 55,
+                    title: '<i class="icon material-icons">bolt</i> Cardio Básico'
+                },
+                {
+                    id: 19,
+                    class: 'speed',
+                    exerciseType: 'Velocidad',
+                    name: 'Burst',
+                    description: 'Ejercicio de aceleración, estrechos cortos de alta velocidad',
+                    duration: 40,
+                    title: '<i class="icon material-icons">bolt</i> Burst'
+                },
+                {
+                    id: 20,
+                    class: 'speed',
+                    exerciseType: 'Velocidad',
+                    name: 'Burst Intenso',
+                    description: 'Muchos estrechos cortos de alta velocidad',
+                    duration: 100,
+                    title: '<i class="icon material-icons">bolt</i> Burst Intenso'
+                }
             ],
             showDialog: false,
             startTime: '',
@@ -89,10 +238,19 @@ export default {
     computed: {
     // Filter the preset exercises based on the searchTitle input
     computedFilteredPresetExercises() {
-        return this.presetExercises.filter((exercise) => {
-            return exercise.title.toLowerCase().includes(this.searchTitle.toLowerCase());
+        console.log(this.searchTitle)
+        if (!this.searchTitle) {
+          return this.presetExercises;
+        }
+        const query = this.searchTitle.toLowerCase();
+        return this.presetExercises.filter(exercise => {
+          return (
+            exercise.name.toLowerCase().includes(query) ||
+            exercise.description.toLowerCase().includes(query) ||
+            exercise.exerciseType.toLowerCase().includes(query)
+          );
         });
-        },
+      }
     },
     methods: {
         filterPresetExercises() {
@@ -186,7 +344,6 @@ export default {
 
                 this.events.push(newEvent);
             }
-
             this.showDialog = false;
             this.clickedDate = null;
             this.startTime = ''; // Reset the selected start time
@@ -228,7 +385,21 @@ export default {
             this.clickedDate = null;
             this.startTime = ''; // Reset the selected start time
             this.selectedPresetExercise = null; // Reset the selected preset exercise
-    },
+        },
+        exerciseTypeToImg(exerciseType) {
+            if (exerciseType == 'Fuerza') {
+            return ('fitness_center')
+            }
+            else if (exerciseType == 'Cadencia') {
+            return ('timer')
+            }
+            else if (exerciseType == 'Velocidad') {
+            return ('bolt')
+            }
+            else {
+            return ('directions_run')
+            }
+        },
     },
     mounted() {
         setTimeout(() => {
