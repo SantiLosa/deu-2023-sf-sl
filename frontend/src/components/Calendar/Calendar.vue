@@ -357,7 +357,6 @@ export default {
             // Reset the selected preset exercise and clear the searchTitle
             this.selectedPresetExercise = null;
             this.searchTitle = '';
-            this.filteredPresetExercises = []; // Clear the filtered list
         },
         confirmSelection() {
             if (this.showDialog && this.clickedDate && this.startTime && this.selectedPresetExercise) {
@@ -378,6 +377,7 @@ export default {
                 this.events.push(newEvent);
             }
 
+            this.searchTitle = '';
             this.showDialog = false;
             this.clickedDate = null;
             this.startTime = ''; // Reset the selected start time
@@ -460,7 +460,7 @@ export default {
                 <!-- Add the "Aceptar" button to confirm the selection -->
                 <div class="button-group">
                 <button class="btn btn-primary" @click="confirmSelection">Aceptar</button>
-                <button class="btn btn-secondary" @click="closeDialog">Cancel</button>
+                <button class="btn btn-secondary" @click="closeDialog">Cancelar</button>
                 </div>
             </div>
         </div>
