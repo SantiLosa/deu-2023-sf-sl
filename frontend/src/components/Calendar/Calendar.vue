@@ -427,7 +427,7 @@ export default {
         locale="es"
         :disable-views="['day']"
         :events="events"
-        :on-event-click="onEventClick"
+        :on-event-dblclick="onEventClick"
         @cell-dblclick="toTrainingForm($event)"
         @dblclick="showPresetExercises($event)"
         />
@@ -485,9 +485,9 @@ export default {
                 <div class="modal-footer">
                     <!-- Remove passing of eventId to deleteEvent -->
                     <button class="btn btn-danger" @click="deleteEvent">Eliminar</button>
-                    <router-link :to="{ name: 'ViewEvent', params: { eventId: selectedEvent.id } }">
+                    <!-- <router-link :to="{ name: 'ViewEvent', params: { eventId: selectedEvent.id } }">
                         <button class="btn btn-primary">Ver detalle</button>
-                    </router-link>
+                    </router-link> -->
                     <button class="btn btn-secondary" @click="closeEventDetailsModal">Cancelar</button>
                 </div>
             </div>
