@@ -230,7 +230,6 @@ export default {
             startTime: '',
             selectedPresetExercise: null,
             searchTitle: '',
-            filteredPresetExercises: [],
             showEventDetailsModal: false,
             selectedEvent: null,
         }
@@ -288,7 +287,6 @@ export default {
             // Get the mouse click position
             const clickX = event.clientX;
             const clickY = event.clientY;
-            this.filteredPresetExercises = this.computedFilteredPresetExercises;
 
             // Get the scroll position
             const scrollX = window.scrollX || window.pageXOffset;
@@ -369,8 +367,7 @@ export default {
                 currentDate.setMinutes(parseInt(selectedTime[1], 10));
 
                 const endTime = new Date(currentDate);
-                endTime.setHours(currentDate.getHours() + this.selectedPresetExercise.duration); // Use duration attribute
-
+                endTime.setMinutes(currentDate.getMinutes() + this.selectedPresetExercise.duration)
                 const newEvent = {
                     start: currentDate,
                     end: endTime,
@@ -386,19 +383,21 @@ export default {
             this.startTime = ''; // Reset the selected start time
             this.selectedPresetExercise = null; // Reset the selected preset exercise
         },
-        exerciseTypeToImg(exerciseType) {
-            if (exerciseType == 'Fuerza') {
-            return ('fitness_center')
+        parseMinutes(minutes){ //transforma una cantidad x de minutos en algo como '2 horas, 50 minutos'
+            var horas = Math.floor(minutes / 60)
+            var horaString = ''
+            if (horas > 0) { 
+            horaString = (''+horas+' hora')
+            if (horas > 1) { horaString = horaString+'s'}
             }
-            else if (exerciseType == 'Cadencia') {
-            return ('timer')
+            var minutos = minutes % 60
+            var minutoString =''
+            if (minutos > 0) { 
+            minutoString = (''+minutos+' minuto')
+            if (minutos > 1) { minutoString = minutoString+'s'}
+            if (horaString) { minutoString = ', '+minutoString}
             }
-            else if (exerciseType == 'Velocidad') {
-            return ('bolt')
-            }
-            else {
-            return ('directions_run')
-            }
+            return (horaString+minutoString)
         },
     },
     mounted() {
@@ -434,37 +433,36 @@ export default {
         />
   
         <!-- Preset Exercises Dialog -->
-        <div v-if="showDialog" class="preset-exercises-dialog card">
-        <div class="card-body">
-            <h3 class="card-title">Select a Preset Exercise Routine</h3>
-            
-            <!-- Search by title filter -->
-            <div class="mb-3">
-            <label for="searchTitle">Search by Title:</label>
-            <input type="text" id="searchTitle" v-model="searchTitle" @input="filterPresetExercises" />
-            </div>
+        <div v-if="showDialog" class="preset-exercises-dialog card sticky-top">
+            <div class="card-body">
+                <h5 class="card-title">Elija una rutina</h5>
+                
+                <!-- Search by title filter -->
+                <div class="mb-3">
+                <label for="searchTitle">Buscar:</label>
+                <input type="text" id="searchTitle" v-model="searchTitle" @input="filterPresetExercises" />
+                </div>
 
-        <!-- Scrollable list with radio buttons for preset exercises -->
-        <div class="scrollable-list">
-        <label v-for="exercise in computedFilteredPresetExercises" :key="exercise.class">
-            <input type="radio" v-model="selectedPresetExercise" :value="exercise" />
-            <span v-html="exercise.title"></span>
-            <span>Duration: {{ exercise.duration }} hours</span>
-        </label>
-        </div>
-
-            <!-- Input form to set the start time for the selected preset event -->
-            <div v-if="clickedDate">
-            <label for="startTime">Start Time:</label>
-            <input type="time" id="startTime" v-model="startTime" />
+            <!-- Scrollable list with radio buttons for preset exercises -->
+            <div class="scrollable-list">
+            <label v-for="exercise in computedFilteredPresetExercises" :key="exercise.id" class="col-12">
+                <input type="radio" v-model="selectedPresetExercise" :value="exercise" />
+                <span v-html="exercise.title"></span>
+                <p class="fst-italic fw-light"> ({{this.parseMinutes(exercise.duration)}}) </p>
+            </label>
             </div>
+                <!-- Input form to set the start time for the selected preset event -->
+                <div v-if="clickedDate">
+                <label for="startTime">Hora de comienzo:</label>
+                <input type="time" id="startTime" v-model="startTime" />
+                </div>
 
-            <!-- Add the "Aceptar" button to confirm the selection -->
-            <div class="button-group">
-            <button class="btn btn-primary" @click="confirmSelection">Aceptar</button>
-            <button class="btn btn-secondary" @click="closeDialog">Cancel</button>
+                <!-- Add the "Aceptar" button to confirm the selection -->
+                <div class="button-group">
+                <button class="btn btn-primary" @click="confirmSelection">Aceptar</button>
+                <button class="btn btn-secondary" @click="closeDialog">Cancel</button>
+                </div>
             </div>
-        </div>
         </div>
         <!-- Event Details Dialog -->
         <div v-if="showEventDetailsModal" class="modal fade show" style="display: block;">
@@ -513,5 +511,28 @@ export default {
   padding: 20px;
   border: 1px solid #ccc;
   z-index: 9999; /* Adjust the value as needed */
+}
+
+.scrollable-list {
+  max-height: 300px; /* Adjust the height as needed */
+  overflow-y: auto;
+}
+
+/* Add styles for dark mode */
+[data-bs-theme="dark"] .preset-exercises-dialog {
+  background-color: #333; /* Adjust the background color for dark mode */
+  color: #fff; /* Adjust the text color for dark mode */
+  border-color: #888; /* Adjust the border color for dark mode */
+}
+
+[data-bs-theme="dark"] .preset-exercises-dialog label {
+  color: #fff; /* Adjust the label color for dark mode */
+}
+
+[data-bs-theme="dark"] .preset-exercises-dialog input[type="text"],
+[data-bs-theme="dark"] .preset-exercises-dialog input[type="time"] {
+  background-color: #444; /* Adjust the input background color for dark mode */
+  color: #fff; /* Adjust the input text color for dark mode */
+  border: 1px solid #888; /* Adjust the input border for dark mode */
 }
 </style>
