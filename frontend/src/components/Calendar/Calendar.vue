@@ -464,30 +464,36 @@ export default {
                 </div>
             </div>
         </div>
-        <!-- Event Details Dialog -->
-        <div v-if="showEventDetailsModal" class="modal fade show" style="display: block;">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ selectedEvent.name }}</h5>
-                        <button type="button" class="btn-close" @click="closeEventDetailsModal"></button>
-                    </div>
+    <!-- Event Details Dialog -->
+    <div v-if="showEventDetailsModal" class="modal fade show" style="display: block;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- Display the title with icons using a span tag -->
+                    <h5 class="modal-title">
+                        <span v-html="selectedEvent.title"></span>
+                    </h5>
+                    <button type="button" class="btn-close" @click="closeEventDetailsModal"></button>
+                </div>
                 <div class="modal-body">
-                    <p>Start: {{ selectedEvent.start }}</p>
-                    <p>End: {{ selectedEvent.end }}</p>
+                    <!-- Format the start and end dates using toLocaleString method -->
+                    <p>Inicio: {{ selectedEvent.start.toLocaleString('es', { dateStyle: 'full', timeStyle: 'short' }) }}</p>
+                    <p>Fin: {{ selectedEvent.end.toLocaleString('es', { dateStyle: 'full', timeStyle: 'short' }) }}</p>
+                    <!-- Display the duration of the exercise using the parseMinutes method -->
+                    <p>Duración: {{ parseMinutes((selectedEvent.end - selectedEvent.start) / 60000) }}</p>
                 </div>
                 <div class="modal-footer">
                     <!-- Remove passing of eventId to deleteEvent -->
-                    <button class="btn btn-danger" @click="deleteEvent">Delete Event</button>
+                    <button class="btn btn-danger" @click="deleteEvent">Eliminar</button>
                     <router-link :to="{ name: 'ViewEvent', params: { eventId: selectedEvent.id } }">
-                        <button class="btn btn-primary">View Event</button>
+                        <button class="btn btn-primary">Ver detalle</button>
                     </router-link>
-                    <button class="btn btn-secondary" @click="closeEventDetailsModal">Cancel</button>
-                </div>
+                    <button class="btn btn-secondary" @click="closeEventDetailsModal">Cancelar</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </template>
 <style>
 /* Different color for different event types. */
