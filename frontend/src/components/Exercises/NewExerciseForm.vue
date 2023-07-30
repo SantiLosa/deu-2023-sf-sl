@@ -121,7 +121,8 @@
                 </div>
                 <div class="col">
                     <!--<button type="cancel" class="btn btn-danger">Cancelar</button>-->
-                    <a href="#/ejercicio/list"><button class="btn btn-danger">Cancelar</button></a>
+                    <!--<a href="#/ejercicio/list"><button class="btn btn-danger">Cancelar</button></a>-->
+                    <button type="cancel" @click="cancelar" class="btn btn-danger">Cancelar</button>
                 </div>
             </div>
         </form>
@@ -180,6 +181,9 @@ export default {
     },
     success() {
         alert("Rutina nueva creada con exito")
+    },
+    cancelar() {
+        window.location.href="#/ejercicio/list"
     }
   }
 }
