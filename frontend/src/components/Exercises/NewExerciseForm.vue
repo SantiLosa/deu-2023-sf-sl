@@ -119,7 +119,7 @@
                     <button type="submit" @click="success" class="btn btn-primary" :disabled="(totalDuration<=0)">Confirmar</button>
                 </div>
                 <div class="col">
-                    <button type="cancel" class="btn btn-danger">Cancelar</button>
+                    <a href="#/ejercicio/list"><button type="cancel" class="btn btn-danger">Cancelar</button></a>
                 </div>
             </div>
         </form>
