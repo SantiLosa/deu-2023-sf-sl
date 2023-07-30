@@ -31,7 +31,7 @@
           </tr>
         </tbody>
       </table> 
-      <a href="#/ejercicio/new"><button class="btn btn-info">Nueva rutina</button></a>
+      <a href="#/ejercicio/new"><button class="btn btn-info mb-3">Nueva rutina</button></a>
     </div>
   </template>
 
