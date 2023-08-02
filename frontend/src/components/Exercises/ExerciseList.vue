@@ -35,8 +35,7 @@
     </div>
   </template>
 
-  <script>
-  import presetExercises from '../exerciseData.js';
+<script>
   export default {
     name: 'ExerciseList',
     props: {
@@ -44,10 +43,17 @@
     },
     data() {
       return {
-        presetExercises: presetExercises,
+        presetExercises: [],
         searchQuery: '',
       }
     },
+    created() {
+    // Retrieve data from Local Storage when the component is created
+    const savedData = localStorage.getItem('presetExercises');
+    if (savedData) {
+      this.presetExercises = JSON.parse(savedData);
+    }
+  },
     methods: {
       parseMinutes(minutes){ //transforma una cantidad x de minutos en algo como '2 horas, 50 minutos'
         var horas = Math.floor(minutes / 60)
@@ -94,12 +100,21 @@
           return ('directions_run')
         }
       },
-      borrarRutina(rutina){
-        const index = this.presetExercises.indexOf(rutina)
+      borrarRutina(rutina) {
+        const index = this.presetExercises.indexOf(rutina);
         if (index > -1) {
-          this.presetExercises.splice(index,1)
-          alert("Elemento borrado con exito.")
+          this.presetExercises.splice(index, 1);
+          alert("Elemento borrado con exito.");
+          this.updateExerciseDataFile(); // Call the function to update exerciseData.js
         }
+      },
+      updateExerciseDataFile() {
+        const updatedData = JSON.stringify(this.presetExercises, null, 2);
+
+        // Save the data to Local Storage
+        localStorage.setItem('presetExercises', updatedData);
+
+        console.log('exerciseData.js updated successfully.');
       },
       verRutina(id) {
         if (id == 16) {

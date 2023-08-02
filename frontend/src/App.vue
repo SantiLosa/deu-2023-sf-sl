@@ -7,6 +7,7 @@ import NewExerciseForm from "./components/Exercises/NewExerciseForm.vue"
 import PreferencesForm from "./components/Config/PreferencesForm.vue"
 import HomeScreen from "./components/Home/Home.vue"
 import ExerciseList from "./components/Exercises/ExerciseList.vue"
+import presetExercises from "./components/exerciseData.js";
 
 const routes = {
   '/': LogInForm,
@@ -17,6 +18,16 @@ const routes = {
   '/ejercicio/list': ExerciseList,
   '/preferencias': PreferencesForm,
   '/home': HomeScreen
+}
+
+// Check if the 'presetExercises' item is already in Local Storage
+const savedData = localStorage.getItem('presetExercises');
+
+// If 'presetExercises' item is not present, set the initial value in Local Storage
+if (!savedData) {
+  const initialData = presetExercises;
+
+  localStorage.setItem('presetExercises', JSON.stringify(initialData));
 }
 
 export default {
