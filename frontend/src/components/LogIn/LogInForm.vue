@@ -43,14 +43,14 @@
     },
     methods: {
       logIn() {
-        if (this.credentials.email == 'profesor@gmail.com' && this.credentials.password == 'ciclismo123') {
-          this.$cookies.set('loggedIn', true)
-          window.location.href = "#/home"
-        }
-        else {
-          alert("¡Email o contraseña erroneos!")
-          console.log("Usuario: profesor@gmail.com")
-          console.log("Contraseña: ciclismo123")
+        if (this.credentials.email === 'profesor@gmail.com' && this.credentials.password === 'ciclismo123') {
+          this.$cookies.set('loggedIn', true);
+          this.$store.dispatch('setLoggedIn', true);
+          this.$router.push('/home');
+        } else {
+          alert("¡Email o contraseña incorrectos!");
+          console.log("Usuario: profesor@gmail.com");
+          console.log("Contraseña: ciclismo123");
         }
       }
     }

@@ -1,20 +1,20 @@
 <template>
     <div class="container">
         <div class="row">
-            <h3>Bici dura con pausas</h3>
+            <h3>{{ exerciseData.name }}</h3>
         </div>
         <div class="row">
-            <p>Alternar entre cadencia baja con bici dura y cadencia alta con bici floja.</p>
+            <p>{{ exerciseData.description }}</p>
         </div>
         <div class="row">
             <div class="col">
-                <h3>Tipo de entrenamiento: <span class="badge bg-danger">Fuerza</span></h3>
+                <h3>Tipo de entrenamiento: <span :class="exerciseTypeToCSS(exerciseData.exerciseType)">{{ exerciseData.exerciseType }}</span></h3>
             </div>
             <div class="col">
-                <h3>Tiempo total: 1 hora, 20 minutos</h3>
+                <h3>Tiempo total: {{ parseMinutes(exerciseData.duration) }}</h3>
             </div>
             <div class="col">
-                <h3>Comienzo: 14/2/2023 a las 14:00</h3>
+                <h3>Comienzo: {{ exerciseData.startDate }}</h3>
             </div>
         </div>
     </div>
@@ -54,8 +54,59 @@
   <script>
   export default {
     name: 'ViewExercise',
-    props: {
-      msg: String
+    props: ['exerciseId'],
+    data() {
+        return {
+        exerciseData: null,
+        presetExercises: []
+        };
+    },
+    created() {
+        const savedData = localStorage.getItem('presetExercises');
+        if (savedData) {
+            this.presetExercises = JSON.parse(savedData);
+        }
+        console.log("creation")
+        console.log(this.presetExercises)
+        // Find the exercise object based on the ID passed in the route params
+        console.log(this.$route.params.exerciseId)
+        this.exerciseData = this.findExerciseById(parseInt(this.$route.params.exerciseId));
+    },
+    methods: {
+        findExerciseById(id) {
+            return this.presetExercises.find((exercise) => exercise.id === id);
+        },
+        exerciseTypeToCSS(exerciseType) {
+        if (exerciseType == 'Fuerza') {
+          console.log(exerciseType)
+          return ('badge text-bg-danger')
+        }
+        else if (exerciseType == 'Cadencia') {
+          return ('badge text-bg-success')
+        }
+        else if (exerciseType == 'Velocidad') {
+          return ('badge text-bg-info')
+        }
+        else {
+          return ('badge text-bg-warning')
+        }
+      },
+      parseMinutes(minutes){ //transforma una cantidad x de minutos en algo como '2 horas, 50 minutos'
+        var horas = Math.floor(minutes / 60)
+        var horaString = ''
+        if (horas > 0) { 
+          horaString = (''+horas+' hora')
+          if (horas > 1) { horaString = horaString+'s'}
+        }
+        var minutos = minutes % 60
+        var minutoString =''
+        if (minutos > 0) { 
+          minutoString = (''+minutos+' minuto')
+          if (minutos > 1) { minutoString = minutoString+'s'}
+          if (horaString) { minutoString = ', '+minutoString}
+        }
+        return (horaString+minutoString)
+      },
     }
   }
   </script>

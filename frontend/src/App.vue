@@ -33,40 +33,68 @@ if (!savedData) {
 export default {
   data() {
     return {
-      theme: (this.$cookies.get("theme") != null) ? this.$cookies.get("theme"): "light",
+      theme: (this.$cookies.get("theme") != null)
+        ? this.$cookies.get("theme")
+        : "light",
       loggedIn: false, //only for prototype
-      currentPath: window.location.hash,
-    }
+    };
+  },
+  created() {
+    // Check the 'loggedIn' cookie as soon as the component is created
+    this.checkCredentials();
+
+    // Set the theme using the 'theme' cookie (if available)
+    document.documentElement.setAttribute(
+      "data-bs-theme",
+      this.$cookies.get("theme") || "light"
+    );
   },
   methods: {
     logOut() {
-      this.$cookies.set("loggedIn", false)
-      this.loggedIn = false // only for prototype
+      this.$cookies.set("loggedIn", false);
+      this.loggedIn = false; // Update the loggedIn state when logging out
+      this.$store.dispatch('setLoggedIn', false);
+      this.$router.push("/");
     },
     checkCredentials(){ //only for prototype
       var loggedIn = (this.$cookies.get("loggedIn") != null) ? this.$cookies.get("loggedIn"): "false"
       this.loggedIn = (loggedIn == "true") //turns string "true" into boolean true and string "false" into boolean false
+      this.$store.dispatch('setLoggedIn', this.loggedIn);
       if ((this.currentPath == "#/" || this.currentPath == "") && loggedIn == "true") {
-        window.location.href = "#/home"
+        this.$router.push("/home");
       }
       else if (this.currentPath != "#/" && loggedIn == "false") {
-        window.location.href = "#/"
+        this.$router.push("/");
       }
     }
   },
   computed: {
     currentView() {
-      return routes[this.currentPath.slice(1) || '/']
+      return routes[this.$route.path] || LogInForm;
+    },
+    isLoggedIn() {
+
+      console.log("islogeta", this.$store.getters.isLoggedIn); // Update to this.$store.getters.isLoggedIn
+      // Use the getter from Vuex to get the loggedIn state
+      return this.$store.getters.isLoggedIn; // Update to this.$store.getters.isLoggedIn
     }
+  },
+  components: {
+    LogInForm, // Register the login form component
+  },
+  beforeUpdate(){
+    console.log("before")
   },
   mounted() {
     window.addEventListener('hashchange', () => {
       this.currentPath = window.location.hash
+      console.log("llama check cred de mounted")
       this.checkCredentials()
 		}),
     document.documentElement.setAttribute(
       'data-bs-theme', (this.$cookies.get("theme") != null) ? this.$cookies.get("theme"): "light"
     ),
+    console.log("llama de spues de documen.Element")
     this.checkCredentials()
   }
 }
@@ -74,77 +102,83 @@ export default {
 </script>
 
 <template>
-  <nav v-if="loggedIn" class="navbar navbar-expand-lg navbar-dark bg-dark"> <!--este v-if esconde la nav-bar si no estas loggeado-->
-        <div class="container">
-            <a class="navbar-brand" href="#/home">BiciApp</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-                <ul class="navbar-nav ms-auto">
-                  <li class="nav-item">
-                      <a class="nav-link d-flex align-items-center" href="#/home">
-                          <div>
-                              <i class="icon material-icons">home</i>
-                          </div>
-                          <div class="ms-2">
-                              Inicio
-                          </div>
-                      </a>
-                  </li>
-                  <!--
+  <div>
+    <nav v-if="isLoggedIn" class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container">
+              <router-link class="navbar-brand" to="/home">BiciApp</router-link>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                  <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="#/ejercicio/new">
-                          <div>
-                            <i class="icon material-icons">edit</i>
-                          </div>
-                          <div class="ms-2">
-                            Nuevo Ejercicio
-                          </div>
-                        </a>
-                    </li>
-                    -->
-                    <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
-                      <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <router-link class="nav-link d-flex align-items-center" to="/home">
                             <div>
-                              <i class="icon material-icons">person</i>
+                                <i class="icon material-icons">home</i>
                             </div>
                             <div class="ms-2">
-                              Profesor
+                                Inicio
+                            </div>
+                        </router-link>
+                    </li>
+                    <!--
+                      <li class="nav-item">
+                          <a class="nav-link d-flex align-items-center" href="#/ejercicio/new">
+                            <div>
+                              <i class="icon material-icons">edit</i>
+                            </div>
+                            <div class="ms-2">
+                              Nuevo Ejercicio
                             </div>
                           </a>
-                          <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                            <li>
-                              <a class="dropdown-item d-flex align-items-center" href="#/preferencias">
-                                <div>
-                                  Configuración
+                      </li>
+                      -->
+                      <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+                        <ul class="navbar-nav">
+                          <li class="nav-item dropdown">
+                          <router-link class="nav-link dropdown-toggle d-flex align-items-center" to="/" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              <div>
+                                <i class="icon material-icons">person</i>
+                              </div>
+                              <div class="ms-2">
+                                Profesor
+                              </div>
+                            </router-link>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                              <li>
+                              <router-link class="dropdown-item d-flex align-items-center" to="/preferencias">
+                                  <div>
+                                    Configuración
+                                  </div>
+                                  <div class="ms-2">
+                                    <i class="icon material-icons">settings</i>
+                                  </div>
+                                </router-link>
+                              </li>
+                              <li><hr class="dropdown-divider"></li>
+                              <li>
+                                <div @click="logOut" class="dropdown-item d-flex align-items-center">
+                                  <div>
+                                    Cerrar sesión
+                                  </div>
+                                  <div class="ms-2">
+                                    <i class="icon material-icons">logout</i>
+                                  </div>
                                 </div>
-                                <div class="ms-2">
-                                  <i class="icon material-icons">settings</i>
-                                </div>
-                              </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                              <a @click="logOut" class="dropdown-item d-flex align-items-center" href="#/">
-                                <div>
-                                  Cerrar sesión
-                                </div>
-                                <div class="ms-2">
-                                  <i class="icon material-icons">logout</i>
-                                </div>
-                              </a>
-                            </li>
-                          </ul>
-                        </li>
-                      </ul>
-                    </div>
-                </ul>
-            </div>
-        </div>
-  </nav>
-  <component :is="currentView" />
-<!-- </div> -->
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </div>
+                  </ul>
+              </div>
+          </div>
+    </nav>
+    <template v-if="isLoggedIn">
+      <router-view></router-view>
+    </template>
+    <template v-else>
+      <LogInForm />
+    </template>
+  </div>
 </template>

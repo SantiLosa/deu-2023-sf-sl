@@ -191,7 +191,7 @@ export default {
   methods: {
     viewUser(id) {
       if (id == 9) {
-        window.location.href="#/calendar"
+        this.$router.push("/calendar");
       }
       else {
         alert("Este usuario no era!")

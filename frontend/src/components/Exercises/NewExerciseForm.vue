@@ -183,7 +183,7 @@ export default {
         alert("Rutina nueva creada con exito")
     },
     cancelar() {
-        window.location.href="#/ejercicio/list"
+        this.$router.push("/ejercicio/list");
     }
   }
 }

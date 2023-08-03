@@ -26,12 +26,13 @@
             <td>{{this.parseMinutes(exercise.duration)}}</td>
             <td>{{exercise.description}}</td>
             <!--<td><a class="nav-link" href="#/ejercicio/ejemplo"><button type="button" class="btn btn-primary">Ver</button></a></td>-->
-            <td><button @click="verRutina(exercise.id)" type="button" class="btn btn-primary">Ver</button></td>
+            <td><button @click="verRutina(exercise)" type="button" class="btn btn-primary">Ver</button></td>
+            <!-- <td><button @click="verRutina(exercise.id)" type="button" class="btn btn-primary">Ver</button></td> -->
             <td><button @click="borrarRutina(exercise)" class="btn btn-danger">Borrar</button></td>
           </tr>
         </tbody>
       </table> 
-      <a href="#/ejercicio/new"><button class="btn btn-info mb-3">Nueva rutina</button></a>
+      <router-link to="/ejercicio/new"><button class="btn btn-info mb-3">Nueva rutina</button></router-link>
     </div>
   </template>
 
@@ -116,14 +117,19 @@
 
         console.log('exerciseData.js updated successfully.');
       },
-      verRutina(id) {
-        if (id == 16) {
-          window.location.href="#/ejercicio/ejemplo"
+      verRutina(exercise) {
+        try {
+          console.log("Ver rutina button clicked.");
+          console.log(exercise);
+
+          // Access the $router object directly
+          this.$router.push({
+            path: '/ejercicio/ejemplo/' + exercise.id,
+          });
+        } catch (error) {
+          console.error('Error in verRutina:', error);
         }
-        else {
-          alert("Rutina incorrecta")
-        }
-      }
+      },
     },
     computed: {
       filteredExercises() {
