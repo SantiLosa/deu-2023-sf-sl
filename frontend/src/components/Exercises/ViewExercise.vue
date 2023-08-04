@@ -11,7 +11,7 @@
                 <h3>Tipo de entrenamiento: <span :class="exerciseTypeToCSS(exerciseData.exerciseType)">{{ exerciseData.exerciseType }}</span></h3>
             </div>
             <div class="col">
-                <h3>Tiempo total: {{ parseMinutes(exerciseData.duration) }}</h3>
+                <h3>Tiempo total: {{ parseMinutes(exerciseData.duration) }}</h3> <!-- TODO: duracion total deberia ser basada en suma de duraciones de segmento-->
             </div>
             <div class="col">
                 <h3>Comienzo: {{ exerciseData.startDate }}</h3>
@@ -26,25 +26,10 @@
                 <th scope="col">Cadencia media</th>
             </thead>
             <tbody>
-                <tr>
-                    <td>20 minutos</td>
-                    <td>120</td>
-                    <td>50</td>
-                </tr>
-                <tr>
-                    <td>20 minutos</td>
-                    <td>180</td>
-                    <td>30</td>
-                </tr>
-                <tr>
-                    <td>20 minutos</td>
-                    <td>120</td>
-                    <td>50</td>
-                </tr>
-                <tr>
-                    <td>20 minutos</td>
-                    <td>180</td>
-                    <td>30</td>
+                <tr v-for="segment in exerciseData.segments" v-bind:key="segment.id">
+                    <td>{{ segment.segmentDuration }} minutos</td>
+                    <td>{{ segment.cadence }}</td>
+                    <td>{{ segment.beatsPerMinute }}</td>
                 </tr>
             </tbody>
         </table>

@@ -23,7 +23,7 @@
             <td>
               <span v-bind:class=this.exerciseTypeToCSS(exercise.exerciseType)>
               <i class="icon material-icons">{{this.exerciseTypeToImg(exercise.exerciseType)}}</i>{{exercise.exerciseType}}</span></td>
-            <td>{{this.parseMinutes(exercise.duration)}}</td>
+            <td>{{this.parseMinutes(exercise.duration)}}</td> <!--TODO: duracion total deberia ser suma de duraciones de segmentos-->
             <td>{{exercise.description}}</td>
             <!--<td><a class="nav-link" href="#/ejercicio/ejemplo"><button type="button" class="btn btn-primary">Ver</button></a></td>-->
             <td><button @click="verRutina(exercise)" type="button" class="btn btn-primary">Ver</button></td>
