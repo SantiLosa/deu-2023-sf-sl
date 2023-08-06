@@ -232,6 +232,7 @@ export default {
             searchTitle: '',
             showEventDetailsModal: false,
             selectedEvent: null,
+            selectedDay: null,
         }
     },
     computed: {
@@ -280,28 +281,6 @@ export default {
 
             this.closeEventDetailsModal(); // Close the modal after deleting the event
         },
-        showPresetExercises(event) {
-            // Handle the double-click event to show the preset exercises dialog.
-            this.showDialog = true;
-
-            // Get the mouse click position
-            const clickX = event.clientX;
-            const clickY = event.clientY;
-
-            // Get the scroll position
-            const scrollX = window.scrollX || window.pageXOffset;
-            const scrollY = window.scrollY || window.pageYOffset;
-
-            // Set the position of the dialog based on the mouse click position and scroll position
-            const dialogElement = document.querySelector('.preset-exercises-dialog');
-            dialogElement.style.left = `${clickX + scrollX}px`;
-            dialogElement.style.top = `${clickY + scrollY}px`;
-            console.log("AAAAA",this.clickedDate)
-            // Set the start time input to the clicked cell time
-            const hour = this.clickedDate.getHours().toString().padStart(2, '0'); // Get the hours (formatted with leading zeros)
-            const minutes = this.clickedDate.getMinutes().toString().padStart(2, '0'); // Get the minutes (formatted with leading zeros)
-            this.startTime = `${hour}:${minutes}`; // Set the start time input value
-        },
         onCellDblClick(clickedCell) {
             console.log(clickedCell); // Log the clicked cell object for debugging purposes
 
@@ -317,11 +296,17 @@ export default {
             // Get the startDate from the clicked cell object
             console.log("CLIKED CELL",clickedCell)
             const clickedDate = new Date(clickedCell)
-            const hour = clickedDate.getHours()
-            console.log("start_hour", hour)
-
-            this.showDialog = true;
             this.clickedDate = clickedDate;
+            // const hour = clickedDate.getHours()
+            const hour = this.clickedDate.getHours().toString().padStart(2, '0'); // Get the hours (formatted with leading zeros)
+            const minutes = this.clickedDate.getMinutes().toString().padStart(2, '0'); // Get the minutes (formatted with leading zeros)
+            this.startTime = `${hour}:${minutes}`; // Set the start time input value
+            console.log("start_hour", hour)
+            // Set the selected day for the event
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            this.selectedDay = clickedDate.toLocaleDateString('es', options);
+            
+            this.showDialog = true;
         },
         addPresetExercise(presetExercise) {
             if (this.showDialog && this.clickedDate && this.startTime) {
@@ -428,14 +413,13 @@ export default {
         :disable-views="['day']"
         :events="events"
         :on-event-dblclick="onEventClick"
-        @cell-dblclick="toTrainingForm($event)"
-        @dblclick="showPresetExercises($event)"
+        @cell-dblclick="toTrainingForm($event)"    
         />
   
         <!-- Preset Exercises Dialog -->
         <div v-if="showDialog" class="preset-exercises-dialog card sticky-top">
             <div class="card-body">
-                <h5 class="card-title">Elija una rutina</h5>
+                <h5 class="card-title">Elija una rutina para {{ selectedDay }}</h5>
                 
                 <!-- Search by title filter -->
                 <div class="mb-3">
@@ -508,7 +492,7 @@ export default {
 }
 /* Set a higher z-index to make the dialog appear above other elements */
 .preset-exercises-dialog {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
