@@ -6,44 +6,7 @@ export default {
     components: { VueCal },
     data() {
 		return {
-            events: [
-                {
-                    start: '2023-06-12 10:00', // Required.
-                    end: '2023-06-12 12:00', // Required.
-                    title: '<i class="icon material-icons">fitness_center</i> Entrenamiento de Fuerza', // Optional.
-                    class: 'strength'
-                },
-                {
-                    start: '2023-06-13 11:00', // Required.
-                    end: '2023-06-13 13:0', // Required.
-                    title: '<i class="icon material-icons">directions_run</i> Entrenamiento de Resistencia', // Optional.
-                    class: 'resistance'
-                },
-                {
-                    start: '2023-06-14 08:30', // Required.
-                    end: '2023-06-14 11:30', // Required.
-                    title: '<i class="icon material-icons">bolt</i> Entrenamiento de Velocidad', // Optional.
-                    class: 'speed'
-                },
-                {
-                    start: '2023-06-15 08:00', // Required.
-                    end: '2023-06-15 14:00', // Required.
-                    title: '<i class="icon material-icons">timer</i> Entrenamiento de Cadencia', // Optional.
-                    class: 'cadency'
-                },
-                {
-                    start: '2023-06-17 08:00', // Required.
-                    end: '2023-06-17 16:00', // Required.
-                    title: '<i class="icon material-icons">directions_run</i> Entrenamiento de resistencia', // Optional.
-                    class: 'resistance'
-                },
-                {
-                    start: '2023-06-18 07:00', // Required.
-                    end: '2023-06-18 13:00', // Required.
-                    title: '<i class="icon material-icons">bolt</i> Entrenamiento de velocidad', // Optional.
-                    class: 'speed'
-                },
-            ],
+            events: [],
             presetExercises: [
                 {
                     id: 1,
@@ -238,7 +201,6 @@ export default {
     computed: {
     // Filter the preset exercises based on the searchTitle input
     computedFilteredPresetExercises() {
-        console.log(this.searchTitle)
         if (!this.searchTitle) {
           return this.presetExercises;
         }
@@ -268,21 +230,33 @@ export default {
             this.selectedEvent = null;
         },
         deleteEvent() {
-            // Delete the selected event from the events list
-            const index = this.events.findIndex(
-                (event) =>
-                event.name === this.selectedEvent.name &&
-                event.start === this.selectedEvent.start &&
-                event.end === this.selectedEvent.end
-            );
+            // Find the index of the selected event by its id
+            const index = this.events.findIndex(event => event.id === this.selectedEvent.id);
             if (index !== -1) {
+                // Remove the event from the events list
                 this.events.splice(index, 1);
+                // Save the updated events list to localStorage
+                try {
+                    const userId = parseInt(this.$route.params.userId);
+                    const storedUserEvents = localStorage.getItem('userEvents');
+                    if (storedUserEvents) {
+                        const parsedUserEvents = JSON.parse(storedUserEvents);
+                        const updatedUserEvents = parsedUserEvents.map(userEvent => {
+                            if (userEvent.userId === userId) {
+                                // Update the events list for the specific user
+                                userEvent.events = this.events;
+                            }
+                            return userEvent;
+                        });
+                        localStorage.setItem('userEvents', JSON.stringify(updatedUserEvents));
+                    }
+                } catch (error) {
+                    console.error('Error while saving userEvents to localStorage:', error);
+                }
             }
-
             this.closeEventDetailsModal(); // Close the modal after deleting the event
         },
         onCellDblClick(clickedCell) {
-            console.log(clickedCell); // Log the clicked cell object for debugging purposes
 
             if (clickedCell && clickedCell.startDate) {
                 // The cell object exists and has a valid startDate property, proceed with toTrainingForm
@@ -294,14 +268,12 @@ export default {
         },
         toTrainingForm(clickedCell) {
             // Get the startDate from the clicked cell object
-            console.log("CLIKED CELL",clickedCell)
             const clickedDate = new Date(clickedCell)
             this.clickedDate = clickedDate;
             // const hour = clickedDate.getHours()
             const hour = this.clickedDate.getHours().toString().padStart(2, '0'); // Get the hours (formatted with leading zeros)
             const minutes = this.clickedDate.getMinutes().toString().padStart(2, '0'); // Get the minutes (formatted with leading zeros)
             this.startTime = `${hour}:${minutes}`; // Set the start time input value
-            console.log("start_hour", hour)
             // Set the selected day for the event
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             this.selectedDay = clickedDate.toLocaleDateString('es', options);
@@ -345,28 +317,69 @@ export default {
         },
         confirmSelection() {
             if (this.showDialog && this.clickedDate && this.startTime && this.selectedPresetExercise) {
-                const currentDate = new Date(this.clickedDate);
-                const selectedTime = this.startTime.split(':');
-                currentDate.setHours(parseInt(selectedTime[0], 10));
-                currentDate.setMinutes(parseInt(selectedTime[1], 10));
+            const currentDate = new Date(this.clickedDate);
+            const selectedTime = this.startTime.split(':');
+            currentDate.setHours(parseInt(selectedTime[0], 10));
+            currentDate.setMinutes(parseInt(selectedTime[1], 10));
 
-                const endTime = new Date(currentDate);
-                endTime.setMinutes(currentDate.getMinutes() + this.selectedPresetExercise.duration)
-                const newEvent = {
-                    start: currentDate,
-                    end: endTime,
-                    title: this.selectedPresetExercise.title,
-                    class: this.selectedPresetExercise.class,
-                };
+            const endTime = new Date(currentDate);
+            endTime.setMinutes(currentDate.getMinutes() + this.selectedPresetExercise.duration);
 
-                this.events.push(newEvent);
+            // Generate a unique ID for the new event
+            const newEventId = this.events.length > 0 ? this.events[this.events.length - 1].id + 1 : 1;
+
+            const newEvent = {
+                id: newEventId,
+                start: currentDate,
+                end: endTime,
+                title: this.selectedPresetExercise.title,
+                class: this.selectedPresetExercise.class,
+            };
+
+            // Push the new event to the events array
+            this.events.push(newEvent);
+
+                // Get the user ID from the route parameters (if available)
+                const userId = parseInt(this.$route.params.userId);
+
+                // Fetch the stored user events from localStorage
+                const storedUserEvents = localStorage.getItem('userEvents');
+                let userEvents = storedUserEvents ? JSON.parse(storedUserEvents) : [];
+
+                // Check if user events already exist for the user
+                const userEventsIndex = userEvents.findIndex((userEvent) => userEvent.userId === userId);
+                if (userEventsIndex !== -1) {
+                    // Update the existing user events with the new events array
+                    userEvents[userEventsIndex].events = this.events;
+                } else {
+                    // Create a new user events entry if not already present
+                    const newUserEvents = {
+                        userId,
+                        events: this.events,
+                    };
+                    userEvents.push(newUserEvents);
+                }
+
+                // Save the updated user events to localStorage
+                localStorage.setItem('userEvents', JSON.stringify(userEvents));
             }
 
+            // Clear the dialog state and reset selectedPresetExercise
             this.searchTitle = '';
             this.showDialog = false;
             this.clickedDate = null;
-            this.startTime = ''; // Reset the selected start time
-            this.selectedPresetExercise = null; // Reset the selected preset exercise
+            this.startTime = '';
+            this.selectedPresetExercise = null;
+        },
+        // Convert ISO date string to custom format 'YYYY-MM-DD HH:mm'
+        convertToCustomFormat(dateString) {
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${year}-${month}-${day} ${hours}:${minutes}`;
         },
         parseMinutes(minutes){ //transforma una cantidad x de minutos en algo como '2 horas, 50 minutos'
             var horas = Math.floor(minutes / 60)
@@ -403,6 +416,38 @@ export default {
             })
         }
         }, 0)
+        // Loop through the events and convert their start and end date strings
+        this.events.forEach((event) => {
+        event.start = this.convertToCustomFormat(event.start);
+        event.end = this.convertToCustomFormat(event.end);
+        });
+    },
+    created(){
+        try {
+        // Fetch the userEvents data from localStorage
+        const storedUserEvents = localStorage.getItem('userEvents');
+        
+        if (storedUserEvents) {
+            const parsedUserEvents = JSON.parse(storedUserEvents);
+
+            // Get the userId from the route params
+            const userId = parseInt(this.$route.params.userId);
+
+            // Find the userEvents by userId
+            const userEvents = parsedUserEvents.find((userEvent) => userEvent.userId === userId);
+
+            if (userEvents) {
+            // Set the events list from the found userEvents
+            this.events = userEvents.events;
+            } else {
+            console.error(`User events not found for userId: ${userId}`);
+            }
+        } else {
+            console.error('userEvents not found in localStorage');
+        }
+        } catch (error) {
+        console.error('Error while fetching and setting userEvents:', error);
+        }
     }
 }
 </script>

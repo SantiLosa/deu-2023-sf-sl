@@ -17,7 +17,7 @@ import ExerciseList from './components/Exercises/ExerciseList.vue';
 const routes = [
   { path: '/', component: LogInForm },
   { path: '/users', component: UsersTable },
-  { path: '/calendar', component: CalendarCompo },
+  { path: '/calendar/:userId', component: CalendarCompo },
   { path: '/ejercicio/ejemplo/:exerciseId', component: ViewExercise },
   { path: '/ejercicio/new', component: NewExerciseForm },
   { path: '/ejercicio/list', component: ExerciseList },

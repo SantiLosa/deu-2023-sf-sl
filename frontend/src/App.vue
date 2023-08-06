@@ -9,6 +9,7 @@ import HomeScreen from "./components/Home/Home.vue"
 import ExerciseList from "./components/Exercises/ExerciseList.vue"
 import presetExercises from "./components/exerciseData.js";
 import users from "./components/userData.js";
+import allUserEvents from "./components/calendarData.js";
 
 const routes = {
   '/': LogInForm,
@@ -28,9 +29,11 @@ const savedData = localStorage.getItem('presetExercises');
 if (!savedData) {
   const exercisedData = presetExercises;
   const usersData = users;
+  const userEvents = allUserEvents;
 
   localStorage.setItem('presetExercises', JSON.stringify(exercisedData));
   localStorage.setItem('users', JSON.stringify(usersData));
+  localStorage.setItem('userEvents', JSON.stringify(userEvents));
 }
 
 export default {
