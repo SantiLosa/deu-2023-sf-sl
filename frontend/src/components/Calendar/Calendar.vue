@@ -15,23 +15,27 @@ export default {
             showEventDetailsModal: false,
             selectedEvent: null,
             selectedDay: null,
+            user: '', //usuario profesor o santiago
         }
     },
     computed: {
-    // Filter the preset exercises based on the searchTitle input
-    computedFilteredPresetExercises() {
-        if (!this.searchTitle) {
-          return this.presetExercises;
+        // Filter the preset exercises based on the searchTitle input
+        computedFilteredPresetExercises() {
+            if (!this.searchTitle) {
+            return this.presetExercises;
+            }
+            const query = this.searchTitle.toLowerCase();
+            return this.presetExercises.filter(exercise => {
+            return (
+                exercise.name.toLowerCase().includes(query) ||
+                exercise.description.toLowerCase().includes(query) ||
+                exercise.exerciseType.toLowerCase().includes(query)
+            );
+            });
+        },
+        isAllowed() {
+            return (this.user == 'profesor') //todo: implement actual role checking lmao
         }
-        const query = this.searchTitle.toLowerCase();
-        return this.presetExercises.filter(exercise => {
-          return (
-            exercise.name.toLowerCase().includes(query) ||
-            exercise.description.toLowerCase().includes(query) ||
-            exercise.exerciseType.toLowerCase().includes(query)
-          );
-        });
-      }
     },
     methods: {
         filterPresetExercises() {
@@ -75,29 +79,36 @@ export default {
             }
             this.closeEventDetailsModal(); // Close the modal after deleting the event
         },
+        /* Seems like this method isn't used anywhere? uncomment if something breaks
         onCellDblClick(clickedCell) {
-
-            if (clickedCell && clickedCell.startDate) {
-                // The cell object exists and has a valid startDate property, proceed with toTrainingForm
-                this.toTrainingForm(clickedCell);
-            } else {
-                // The cell object or startDate property is missing
-                console.log(" ondouble clik Cell or startDate property is missing.");
+            console.log("on cell db click")
+            if (this.user == 'profesor'){ 
+                console.log("user IS profesor")
+                if (clickedCell && clickedCell.startDate) {
+                    // The cell object exists and has a valid startDate property, proceed with toTrainingForm
+                    this.toTrainingForm(clickedCell);
+                } else {
+                    // The cell object or startDate property is missing
+                    console.log(" ondouble clik Cell or startDate property is missing.");
+                }
             }
         },
+        */
         toTrainingForm(clickedCell) {
-            // Get the startDate from the clicked cell object
-            const clickedDate = new Date(clickedCell)
-            this.clickedDate = clickedDate;
-            // const hour = clickedDate.getHours()
-            const hour = this.clickedDate.getHours().toString().padStart(2, '0'); // Get the hours (formatted with leading zeros)
-            const minutes = this.clickedDate.getMinutes().toString().padStart(2, '0'); // Get the minutes (formatted with leading zeros)
-            this.startTime = `${hour}:${minutes}`; // Set the start time input value
-            // Set the selected day for the event
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            this.selectedDay = clickedDate.toLocaleDateString('es', options);
-            
-            this.showDialog = true;
+            if (this.user == 'profesor'){ //if the user has permission. TODO: turn into a real permission checker
+                // Get the startDate from the clicked cell object
+                const clickedDate = new Date(clickedCell)
+                this.clickedDate = clickedDate;
+                // const hour = clickedDate.getHours()
+                const hour = this.clickedDate.getHours().toString().padStart(2, '0'); // Get the hours (formatted with leading zeros)
+                const minutes = this.clickedDate.getMinutes().toString().padStart(2, '0'); // Get the minutes (formatted with leading zeros)
+                this.startTime = `${hour}:${minutes}`; // Set the start time input value
+                // Set the selected day for the event
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                this.selectedDay = clickedDate.toLocaleDateString('es', options);
+                
+                this.showDialog = true;
+            }
         },
         addPresetExercise(presetExercise) {
             if (this.showDialog && this.clickedDate && this.startTime) {
@@ -272,6 +283,8 @@ export default {
         if (presetExercisesData) {
             this.presetExercises = JSON.parse(presetExercisesData);
         }
+
+        this.user = this.$store.getters.user
     }
 }
 </script>
@@ -337,7 +350,8 @@ export default {
                 </div>
                 <div class="modal-footer">
                     <!-- Remove passing of eventId to deleteEvent -->
-                    <button class="btn btn-danger" @click="deleteEvent">Eliminar</button>
+                    <button v-if="isAllowed" class="btn btn-danger" @click="deleteEvent">Eliminar</button>
+                    <div v-else></div>
                     <!-- <router-link :to="{ name: 'ViewEvent', params: { eventId: selectedEvent.id } }">
                         <button class="btn btn-primary">Ver detalle</button>
                     </router-link> -->

@@ -28,11 +28,17 @@
             <!--<td><a class="nav-link" href="#/ejercicio/ejemplo"><button type="button" class="btn btn-primary">Ver</button></a></td>-->
             <td><button @click="verRutina(exercise)" type="button" class="btn btn-primary">Ver</button></td>
             <!-- <td><button @click="verRutina(exercise.id)" type="button" class="btn btn-primary">Ver</button></td> -->
-            <td><button @click="borrarRutina(exercise)" class="btn btn-danger">Borrar</button></td>
+            <td>
+              <button v-if="isAllowed" @click="borrarRutina(exercise)" class="btn btn-danger">Borrar</button>
+              <div v-else></div>
+            </td>
           </tr>
         </tbody>
-      </table> 
-      <router-link to="/ejercicio/new"><button class="btn btn-info mb-3">Nueva rutina</button></router-link>
+      </table>
+      <div v-if="isAllowed">
+        <router-link to="/ejercicio/new"><button class="btn btn-info mb-3">Nueva rutina</button></router-link>
+      </div>
+      <div v-else></div> 
     </div>
   </template>
 
@@ -46,6 +52,7 @@
       return {
         presetExercises: [],
         searchQuery: '',
+        user: '',
       }
     },
     created() {
@@ -54,7 +61,8 @@
     if (savedData) {
       this.presetExercises = JSON.parse(savedData);
     }
-  },
+    this.user = this.$store.getters.user
+    },
     methods: {
       parseMinutes(minutes){ //transforma una cantidad x de minutos en algo como '2 horas, 50 minutos'
         var horas = Math.floor(minutes / 60)
@@ -144,6 +152,9 @@
             exercise.exerciseType.toLowerCase().includes(query)
           );
         });
+      },
+      isAllowed() {
+        return (this.user == 'profesor') //todo: implement actual role checking lmao
       }
     },
     watch: {

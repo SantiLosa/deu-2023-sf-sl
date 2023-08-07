@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row align-items-start">
 
-            <div v-if="this.user == 'profesor'" class="col">
+            <div v-if="isAllowed" class="col">
                 <div class="my-4 card" style="width: 18rem;">
                     <!--<img src="..." class="card-img-top" alt="...">-->
                     <div class="card-body">
@@ -50,6 +50,11 @@
   created() {
     // Retrieve data from Local Storage when the component is created
     this.user = this.$store.getters.user
+  },
+  computed: {
+    isAllowed() {
+        return (this.user == 'profesor') //todo: implement actual role checking lmao
+    }
   }
 }
   </script>
