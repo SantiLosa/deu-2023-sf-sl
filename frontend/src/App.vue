@@ -53,6 +53,7 @@ export default {
         ? this.$cookies.get("theme")
         : "light",
       loggedIn: false, //only for prototype
+      user: '',
     };
   },
   created() {
@@ -70,16 +71,24 @@ export default {
       this.$cookies.set("loggedIn", false);
       this.loggedIn = false; // Update the loggedIn state when logging out
       this.$store.dispatch('setLoggedIn', false);
+      this.$cookies.set('user', '');
+      this.user = '';
+      this.$store.dispatch('setUser', '');
       this.$router.push("/");
     },
     checkCredentials(){ //only for prototype
       var loggedIn = (this.$cookies.get("loggedIn") != null) ? this.$cookies.get("loggedIn"): "false"
       this.loggedIn = (loggedIn == "true") //turns string "true" into boolean true and string "false" into boolean false
-      this.$store.dispatch('setLoggedIn', this.loggedIn);
-      if ((this.currentPath == "#/" || this.currentPath == "") && loggedIn == "true") {
+      this.$store.dispatch('setLoggedIn', this.loggedIn)
+
+      var username = (this.$cookies.get("user") != null) ? this.$cookies.get("user") : ''
+      this.user = username
+      this.$store.dispatch('setUser', username)
+
+      if ((this.currentPath == "/" || this.currentPath == "") && loggedIn == "true") {
         this.$router.push("/home");
       }
-      else if (this.currentPath != "#/" && loggedIn == "false") {
+      else if ((this.currentPath != "/" && this.currentPath != "") && loggedIn == "false") {
         this.$router.push("/");
       }
     }
@@ -89,30 +98,34 @@ export default {
       return routes[this.$route.path] || LogInForm;
     },
     isLoggedIn() {
-
-      console.log("islogeta", this.$store.getters.isLoggedIn); // Update to this.$store.getters.isLoggedIn
+      console.log("App: "+this.user)
       // Use the getter from Vuex to get the loggedIn state
       return this.$store.getters.isLoggedIn; // Update to this.$store.getters.isLoggedIn
+    },
+    userName() {
+      return this.$store.getters.user;
     }
   },
   components: {
     LogInForm, // Register the login form component
   },
+  /*
   beforeUpdate(){
     console.log("before")
   },
-  mounted() {
+  */
+  /*mounted() {
     window.addEventListener('hashchange', () => {
       this.currentPath = window.location.hash
-      console.log("llama check cred de mounted")
+      //console.log("llama check cred de mounted")
       this.checkCredentials()
 		}),
     document.documentElement.setAttribute(
       'data-bs-theme', (this.$cookies.get("theme") != null) ? this.$cookies.get("theme"): "light"
     ),
-    console.log("llama de spues de documen.Element")
+    //console.log("llama de spues de documen.Element")
     this.checkCredentials()
-  }
+  }*/
 }
 
 </script>
@@ -152,12 +165,15 @@ export default {
                       <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
                         <ul class="navbar-nav">
                           <li class="nav-item dropdown">
-                          <router-link class="nav-link dropdown-toggle d-flex align-items-center" to="/" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <router-link class="nav-link dropdown-toggle d-flex align-items-center" to="/" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                               <div>
                                 <i class="icon material-icons">person</i>
                               </div>
-                              <div class="ms-2">
+                              <div v-if="userName == 'profesor'" class="ms-2"> <!-- only for prototype, real app should just get the name from the user data-->
                                 Profesor
+                              </div>
+                              <div v-else class="ms-2">
+                                Santiago
                               </div>
                             </router-link>
                             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">

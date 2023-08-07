@@ -42,15 +42,27 @@
       }
     },
     methods: {
-      logIn() {
+      logIn() { //TODO: implement a proper backend I guess
         if (this.credentials.email === 'profesor@gmail.com' && this.credentials.password === 'ciclismo123') {
           this.$cookies.set('loggedIn', true);
+          this.$cookies.set('user', 'profesor')
           this.$store.dispatch('setLoggedIn', true);
+          this.$store.dispatch('setUser', 'profesor')
           this.$router.push('/home');
+        } else if (this.credentials.email === 'santiago@pereyra.com' && this.credentials.password === 'ciclismo987') {
+          this.$cookies.set('loggedIn', true);
+          this.$cookies.set('user', 'santiago');
+          this.$store.dispatch('setLoggedIn', true);
+          this.$store.dispatch('setUser', 'santiago');
+          this.$router.push('/home')
         } else {
           alert("¡Email o contraseña incorrectos!");
+          console.log("Profesor:")
           console.log("Usuario: profesor@gmail.com");
           console.log("Contraseña: ciclismo123");
+          console.log("Alumno:")
+          console.log("Usuario: santiago@pereyra.com")
+          console.log("Contraseña: ciclismo987");
         }
       }
     }
