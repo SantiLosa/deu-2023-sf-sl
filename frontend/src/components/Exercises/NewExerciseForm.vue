@@ -181,6 +181,7 @@ export default {
     },
     success() {
         alert("Rutina nueva creada con exito")
+        this.$router.push("/ejercicio/list");
     },
     cancelar() {
         this.$router.push("/ejercicio/list");

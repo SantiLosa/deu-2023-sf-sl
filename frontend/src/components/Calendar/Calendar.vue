@@ -1,6 +1,7 @@
 <script>
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
+
 export default {
     name: 'CalendarCompo',
     components: { VueCal },
@@ -10,12 +11,24 @@ export default {
             presetExercises: [],
             showDialog: false,
             startTime: '',
-            selectedPresetExercise: null,
+            selectedPresetExercise: 'CUSTOM',
             searchTitle: '',
             showEventDetailsModal: false,
+            showCustomExerciseModal: false,
             selectedEvent: null,
             selectedDay: null,
             user: '', //usuario profesor o santiago
+            segmentsCustomExercise: [], // Array to store segments
+            newSegmentCustomExercise: { // Object to hold data for the new segment
+                duracion: '',
+                pulsaciones: '',
+                cadencia: ''
+            },
+            customExerciseType: 'strength',
+            customExerciseName: '',
+            customExerciseDescription: '',
+            customExerciseSelectedDay: null,
+            customExerciseStartTime: null,
         }
     },
     computed: {
@@ -30,12 +43,27 @@ export default {
                 exercise.name.toLowerCase().includes(query) ||
                 exercise.description.toLowerCase().includes(query) ||
                 exercise.exerciseType.toLowerCase().includes(query)
-            );
+                );
             });
         },
         isAllowed() {
             return (this.user == 'profesor') //todo: implement actual role checking lmao
-        }
+        },
+        totalDurationCustomExercise() {
+            // Calculate the total duration by summing up the durations of all segments
+            return this.segmentsCustomExercise.reduce((total, segment) => total + parseInt(segment.duracion), 0);
+        },
+        isFormValid() {
+            // Check if all the required fields have values
+            return (
+                this.newSegmentCustomExercise.duracion !== '' &&
+                this.newSegmentCustomExercise.pulsaciones !== '' &&
+                this.newSegmentCustomExercise.cadencia !== '' &&
+                this.newSegmentCustomExercise.duracion > 0 &&
+                this.newSegmentCustomExercise.pulsaciones > 0 &&
+                this.newSegmentCustomExercise.cadencia > 0
+            );
+            },
     },
     methods: {
         filterPresetExercises() {
@@ -142,11 +170,15 @@ export default {
             this.startTime = '';
 
             // Reset the selected preset exercise and clear the searchTitle
-            this.selectedPresetExercise = null;
+            this.selectedPresetExercise = 'CUSTOM';
             this.searchTitle = '';
         },
         confirmSelection() {
-            if (this.showDialog && this.clickedDate && this.startTime && this.selectedPresetExercise) {
+            if (this.selectedPresetExercise == "CUSTOM"){
+                this.showCustomExerciseModal = true
+                this.customExerciseStartTime = this.startTime
+                this.customExerciseSelectedDay = this.clickedDate
+            } else if (this.showDialog && this.clickedDate && this.startTime && this.selectedPresetExercise) {
             const currentDate = new Date(this.clickedDate);
             const selectedTime = this.startTime.split(':');
             currentDate.setHours(parseInt(selectedTime[0], 10));
@@ -199,7 +231,7 @@ export default {
             this.showDialog = false;
             this.clickedDate = null;
             this.startTime = '';
-            this.selectedPresetExercise = null;
+            this.selectedPresetExercise = "CUSTOM";
         },
         // Convert ISO date string to custom format 'YYYY-MM-DD HH:mm'
         convertToCustomFormat(dateString) {
@@ -226,6 +258,117 @@ export default {
             if (horaString) { minutoString = ', '+minutoString}
             }
             return (horaString+minutoString)
+        },
+        cancelarCustomExercise(){
+            this.showCustomExerciseModal = false
+            this.customExerciseStartTime = null
+            this.customExerciseSelectedDay = null
+        },
+        confirmarCustomExercise(){
+            if (this.customExerciseSelectedDay && this.customExerciseStartTime) {
+            const currentDate = new Date(this.customExerciseSelectedDay);
+            const selectedTime = this.customExerciseStartTime.split(':');
+            currentDate.setHours(parseInt(selectedTime[0], 10));
+            currentDate.setMinutes(parseInt(selectedTime[1], 10));
+
+            const endTime = new Date(currentDate);
+            endTime.setMinutes(currentDate.getMinutes() + this.totalDurationCustomExercise);
+
+            // Generate a unique ID for the new event
+            const newEventId = this.events.length > 0 ? this.events[this.events.length - 1].id + 1 : 1;
+
+            var newTitle = ''
+            var newClass = ''
+            switch (this.customExerciseType) {
+                case 'strength':
+                    //code
+                    newTitle='<i class="icon material-icons">fitness_center</i> '+this.customExerciseName
+                    newClass='strength'
+                    break
+                case 'cadence':
+                    //code
+                    newTitle= '<i class="icon material-icons">timer</i> '+this.customExerciseName
+                    newClass= 'cadency'
+                    break
+                case 'speed':
+                    //code
+                    newTitle='<i class="icon material-icons">directions_bike</i> '+this.customExerciseName
+                    newClass= 'speed'
+                    break
+                case 'resistance':
+                    //code
+                    newTitle='<i class="icon material-icons">directions_run</i> '+this.customExerciseName
+                    newClass= 'resistance'
+                    break
+            }
+
+            const newEvent = {
+                id: newEventId,
+                start: currentDate,
+                end: endTime,
+                title: newTitle,
+                class: newClass,
+            };
+            // Push the new event to the events array
+            this.events.push(newEvent);
+
+            // Get the user ID from the route parameters (if available)
+            const userId = parseInt(this.$route.params.userId);
+
+            // Fetch the stored user events from localStorage
+            const storedUserEvents = localStorage.getItem('userEvents');
+            let userEvents = storedUserEvents ? JSON.parse(storedUserEvents) : [];
+
+            // Check if user events already exist for the user
+            const userEventsIndex = userEvents.findIndex((userEvent) => userEvent.userId === userId);
+            if (userEventsIndex !== -1) {
+                // Update the existing user events with the new events array
+                userEvents[userEventsIndex].events = this.events;
+            } else {
+                // Create a new user events entry if not already present
+                const newUserEvents = {
+                    userId,
+                    events: this.events,
+                };
+                userEvents.push(newUserEvents);
+            }
+
+            // Save the updated user events to localStorage
+            localStorage.setItem('userEvents', JSON.stringify(userEvents));
+
+            }
+
+            // Clear the dialog state and reset selectedPresetExercise
+            
+            this.segmentsCustomExercise= [] // Array to store segments
+            this.newSegmentCustomExercise= { // Object to hold data for the new segment
+                duracion: '',
+                pulsaciones: '',
+                cadencia: ''
+            },
+            this.customExerciseType= 'strength'
+            this.customExerciseName= ''
+            this.customExerciseDescription= ''
+            this.showCustomExerciseModal = false
+            this.customExerciseStartTime = this.startTime
+            this.customExerciseSelectedDay = this.selectedDay
+        },
+        addSegmentCustomExercise() {
+        // Push the new segment data to the segments array
+        this.segmentsCustomExercise.push({
+            duracion: this.newSegmentCustomExercise.duracion,
+            pulsaciones: this.newSegmentCustomExercise.pulsaciones,
+            cadencia: this.newSegmentCustomExercise.cadencia
+        });
+
+        // Clear the input fields for the next segment
+        this.newSegmentCustomExercise.duracion = '';
+        this.newSegmentCustomExercise.pulsaciones = '';
+        this.newSegmentCustomExercise.cadencia = '';
+        },
+        removeSegmentCustomExercise(index) {
+        // Remove the segment from the array based on its index
+        this.segmentsCustomExercise.splice(index, 1);
         },
     },
     mounted() {
@@ -311,11 +454,19 @@ export default {
 
             <!-- Scrollable list with radio buttons for preset exercises -->
             <div class="scrollable-list">
-            <label v-for="exercise in computedFilteredPresetExercises" :key="exercise.id" class="col-12">
-                <input type="radio" v-model="selectedPresetExercise" :value="exercise" />
-                <span v-html="exercise.title"></span>
-                <p class="fst-italic fw-light"> ({{this.parseMinutes(exercise.duration)}}) </p>
-            </label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" v-model="selectedPresetExercise" value="CUSTOM" checked id="customOption"/>
+                    <label class="form-check-label" for="customOption">
+                        <span class="badge text-bg-primary"><i class="icon material-icons">add</i>CREAR NUEVO</span>
+                    </label>
+                </div>
+                <div v-for="exercise in computedFilteredPresetExercises" :key="exercise.id" class="form-check">
+                    <input class="form-check-input" type="radio" v-model="selectedPresetExercise" :value="exercise" :id="'option'+exercise.id"/>
+                    <label class="form-check-label" :for="'option'+exercise.id">
+                        <span v-html="exercise.title"></span>
+                        <p class="fst-italic fw-light"> ({{this.parseMinutes(exercise.duration)}}) </p>
+                    </label>
+                </div>
             </div>
                 <!-- Input form to set the start time for the selected preset event -->
                 <div v-if="clickedDate">
@@ -360,6 +511,141 @@ export default {
             </div>
         </div>
     </div>
+    <div v-else></div>
+    <!-- Event Details Dialog -->
+    <div v-if="showCustomExerciseModal" class="modal fade show" style="display: block;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="container">
+                    <div class="row">
+                    <!-- <h2>Nuevo entrenamiento para Pedro Lopez</h2> -->
+                        <h6>Ejercicio Personalizado</h6>
+                    </div>
+                    <div class="row">
+                        <div class="col align-self-center left-entry">
+                            <fieldset class="border rounded p-2">
+                                <legend>Elegir el tipo de ejercicio:</legend>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="customExerciseType" name="excerciseRadio" id="strengthRadio" value="strength" checked>
+                                    <label class="form-check-label" for="strengthRadio">
+                                        <span class="badge text-bg-danger">
+                                            <i class="icon material-icons">fitness_center</i>Fuerza</span>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="customExerciseType" name="excerciseRadio" id="cadenceRadio" value="cadence">
+                                    <label class="form-check-label" for="cadenceRadio">
+                                        <span class="badge text-bg-success">
+                                            <i class="icon material-icons">timer</i>Cadencia</span>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="customExerciseType" name="excerciseRadio" id="speedRadio" value="speed">
+                                    <label class="form-check-label" for="speedRadio">
+                                        <span class="badge text-bg-info">
+                                            <i class="icon material-icons">bolt</i>Velocidad</span>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" v-model="customExerciseType" name="excerciseRadio" id="resistanceRadio" value="resistance">
+                                    <label class="form-check-label" for="resistanceRadio">
+                                        <span class="badge text-bg-warning">
+                                            <i class="icon material-icons">directions_run</i>Resistencia</span>
+                                    </label>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col right-entry">
+                            <div class="form-group mb-3">
+                                <label for="nombreRutina" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" v-model="customExerciseName" id="nombreRutina">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="descripcionRutina" class="form-label">Descripcion</label>
+                                <textarea class="form-control" v-model="customExerciseDescription" id="descripcionRutina"></textarea>
+                            </div>
+                            <!-- Display the total duration -->
+                            <div class="input-group mb-3">
+                            <label for="cantidadTiempoTotal" class="input-group-text">Cantidad de tiempo total:</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="cantidadTiempoTotal"
+                                v-model="totalDurationCustomExercise"
+                                readonly
+                            >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                    <h5>Segmentos</h5>
+                    <!-- Loop through segments and render cards -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Orden</th>
+                                <th scope="col">Duracion</th>
+                                <th scope="col">Pulsaciones esperadas</th>
+                                <th scope="col">Cadencia media esperada</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(segment, index) in segmentsCustomExercise" :key="index">
+                                <th scope="row">{{ index + 1 }}</th>
+                                <td>{{ segment.duracion }} minutos</td>
+                                <td>{{ segment.pulsaciones }} por minuto</td>
+                                <td>{{ segment.cadencia }} RPM</td>
+                                <td><button @click="removeSegmentCustomExercise(index)" class="btn btn-warning align-self-center" style="float:right"><b>X</b></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+
+                    <!-- Input fields for adding new segment -->
+                    <div class="row row-cols-lg-auto">
+                        <div class="col-12 w-25">
+                            <div class="input-group">
+                            <div class="input-group-text">Duracion: </div>
+                            <input v-model="newSegmentCustomExercise.duracion" type="number" class="form-control" id="duracionSegmento">
+                            <div class="input-group-text">minutos.</div>
+                            </div>
+                        </div>
+                        <div class="col-12 w-25">
+                            <div class="input-group">
+                            <div class="input-group-text">Pulsaciones por minuto: </div>
+                            <input v-model="newSegmentCustomExercise.pulsaciones" type="number" class="form-control" id="pulsacionesSegmento">
+                            </div>
+                        </div>
+                        <div class="col-12 w-25">
+                            <div class="input-group">
+                            <div class="input-group-text">Cadencia media: </div>
+                            <input v-model="newSegmentCustomExercise.cadencia" type="number" class="form-control" id="cadenciaSegmento">
+                            <div class="input-group-text">RPM</div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <!-- Use :disabled to dynamically enable/disable the button -->
+                            <button @click="addSegmentCustomExercise" class="btn btn-info" :disabled="!isFormValid">Agregar Segmento</button>
+                        </div>
+                    </div>
+                </div>
+                    <div class="row">
+                        <div class="col-auto">
+                            <!--<button type="submit" @click="success" class="btn btn-primary" :disabled="(totalDuration<=0)">Confirmar</button>-->
+                            <button @click="confirmarCustomExercise" class="btn btn-primary" :disabled="(totalDurationCustomExercise<=0)">Confirmar</button>
+                        </div>
+                        <div class="col">
+                            <!--<button type="cancel" class="btn btn-danger">Cancelar</button>-->
+                        
+                            <button type="cancel" @click="cancelarCustomExercise" class="btn btn-danger">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-else></div>
 </div>
 </template>
 <style>
