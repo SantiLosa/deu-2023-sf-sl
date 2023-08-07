@@ -68,14 +68,7 @@ export default {
   },
   methods: {
     viewUser(id) {
-      if (id == 9) {
-        this.$router.push({
-            path: '/calendar/' + id,
-          });
-      }
-      else {
-        alert("Este usuario no era!")
-      }
+      this.$router.push({path: '/calendar/' + id,});
     }
   }
 }

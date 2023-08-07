@@ -23,17 +23,27 @@ const routes = {
 }
 
 // Check if the 'presetExercises' item is already in Local Storage
-const savedData = localStorage.getItem('presetExercises');
+const savedPresetExercises = localStorage.getItem('presetExercises');
+const savedUsers = localStorage.getItem('users');
+const savedEvents = localStorage.getItem('userEvents');
 
 // If 'presetExercises' item is not present, set the initial value in Local Storage
-if (!savedData) {
+if (!savedPresetExercises || !savedUsers || !savedEvents) {
   const exercisedData = presetExercises;
   const usersData = users;
   const userEvents = allUserEvents;
 
-  localStorage.setItem('presetExercises', JSON.stringify(exercisedData));
-  localStorage.setItem('users', JSON.stringify(usersData));
-  localStorage.setItem('userEvents', JSON.stringify(userEvents));
+  if (!savedPresetExercises) {
+    localStorage.setItem('presetExercises', JSON.stringify(exercisedData));
+  }
+
+  if (!savedUsers) {
+    localStorage.setItem('users', JSON.stringify(usersData));
+  }
+
+  if (!savedEvents) {
+    localStorage.setItem('userEvents', JSON.stringify(userEvents));
+  }
 }
 
 export default {
