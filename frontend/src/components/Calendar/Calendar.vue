@@ -507,14 +507,20 @@ export default {
                     <!-- Display event segments -->
                     <div v-if="selectedEvent.segments.length > 0">
                         <h6>Segmentos:</h6>
-                        <ul>
-                            <li v-for="(segment, index) in selectedEvent.segments" :key="index">
-                                <p>Segmento {{ index + 1 }}:</p>
-                                <p>Duración: {{ segment.segmentDuration }} minutos</p>
-                                <p>Cadencia: {{ segment.cadence }}</p>
-                                <p>Ritmo cardíaco: {{ segment.beatsPerMinute }}</p>
-                            </li>
-                        </ul>
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Duracion segmento</th>
+                                <th scope="col">Pulsaciones media</th>
+                                <th scope="col">Cadencia media</th>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(segment, index) in selectedEvent.segments" :key="index">
+                                    <td>{{ segment.segmentDuration }} minutos</td>
+                                    <td>{{ segment.cadence }}</td>
+                                    <td>{{ segment.beatsPerMinute }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -584,8 +590,7 @@ export default {
                             </div>
                             <!-- Display the total duration -->
                             <div class="input-group mb-3">
-                                <label for="cantidadTiempoTotal" class="input-group-text">Cantidad de tiempo total:</label>
-                                <p class="form-control" id="cantidadTiempoTotal">{{ totalDurationCustomExercise }}</p>
+                                <label for="cantidadTiempoTotal" class="input-group-text">Duracion total: {{ totalDurationCustomExercise }}</label>
                             </div>
                         </div>
                     </div>

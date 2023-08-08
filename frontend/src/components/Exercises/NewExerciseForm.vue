@@ -50,14 +50,16 @@
                     </div>
                     <!-- Display the total duration -->
                     <div class="input-group mb-3">
-                    <label for="cantidadTiempoTotal" class="input-group-text">Cantidad de tiempo total:</label>
+                    <label for="cantidadTiempoTotal" class="input-group-text">Cantidad de tiempo total: {{ totalDuration }}</label>
+                    <!--
                     <input
                         type="text"
-                        class="form-control"
+                        class="input-group-text"
                         id="cantidadTiempoTotal"
                         v-model="totalDuration"
                         readonly
                     >
+                    -->
                     </div>
                 </div>
             </div>
