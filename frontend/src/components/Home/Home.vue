@@ -26,9 +26,9 @@
                 <div class="my-4 card" style="width: 18rem;">
                     <!-- <img src="..." class="card-img-top" alt="..."> -->
                     <div class="card-body">
-                        <h5 class="card-title">Rutinas</h5>
-                        <p class="card-text">Ver las rutinas pre-cargadas que hay en el sistema hasta ahora, o crear una plantilla de rutina nueva.</p>
-                        <router-link to="/ejercicio/list" class="btn btn-warning">Ver rutinas</router-link>
+                        <h5 class="card-title">Ejercicios</h5>
+                        <p class="card-text">Ver los ejercicios pre-cargados que hay en el sistema hasta ahora, o crear una plantilla de ejercicio nuevo.</p>
+                        <router-link to="/ejercicio/list" class="btn btn-warning">Ver ejercicios</router-link>
                     </div>
                 </div>
             </div>
