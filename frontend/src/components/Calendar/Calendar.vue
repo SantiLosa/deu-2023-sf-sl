@@ -20,9 +20,9 @@ export default {
             user: '', //usuario profesor o santiago
             segmentsCustomExercise: [], // Array to store segments
             newSegmentCustomExercise: { // Object to hold data for the new segment
-                duracion: '',
-                pulsaciones: '',
-                cadencia: ''
+                segmentDuration: '',
+                beatsPerMinute: '',
+                cadence: ''
             },
             customExerciseType: 'strength',
             customExerciseName: '',
@@ -51,17 +51,17 @@ export default {
         },
         totalDurationCustomExercise() {
             // Calculate the total duration by summing up the durations of all segments
-            return this.segmentsCustomExercise.reduce((total, segment) => total + parseInt(segment.duracion), 0);
+            return this.segmentsCustomExercise.reduce((total, segment) => total + parseInt(segment.segmentDuration), 0);
         },
         isFormValid() {
             // Check if all the required fields have values
             return (
-                this.newSegmentCustomExercise.duracion !== '' &&
-                this.newSegmentCustomExercise.pulsaciones !== '' &&
-                this.newSegmentCustomExercise.cadencia !== '' &&
-                this.newSegmentCustomExercise.duracion > 0 &&
-                this.newSegmentCustomExercise.pulsaciones > 0 &&
-                this.newSegmentCustomExercise.cadencia > 0
+                this.newSegmentCustomExercise.segmentDuration !== '' &&
+                this.newSegmentCustomExercise.beatsPerMinute !== '' &&
+                this.newSegmentCustomExercise.cadence !== '' &&
+                this.newSegmentCustomExercise.segmentDuration > 0 &&
+                this.newSegmentCustomExercise.beatsPerMinute > 0 &&
+                this.newSegmentCustomExercise.cadence > 0
             );
             },
     },
@@ -69,9 +69,9 @@ export default {
         filterPresetExercises() {
             // No need to do anything here. The computed property "filteredPresetExercises" handles the filtering.
         },
-        onEventClick(event, e) {
+        onEventClick(clickedEvent, e) {
             // Show the event details modal
-            this.selectedEvent = event;
+            this.selectedEvent =  this.events.find(event => event.id === clickedEvent.id);
             this.showEventDetailsModal = true;
             e.stopPropagation();
         },
@@ -134,7 +134,8 @@ export default {
                 // Set the selected day for the event
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                 this.selectedDay = clickedDate.toLocaleDateString('es', options);
-                
+                this.showEventDetailsModal = false;
+                this.showCustomExerciseModal = false;
                 this.showDialog = true;
             }
         },
@@ -196,6 +197,8 @@ export default {
                 end: endTime,
                 title: this.selectedPresetExercise.title,
                 class: this.selectedPresetExercise.class,
+                segments: this.selectedPresetExercise.segments,
+                duration: this.selectedPresetExercise.duration,
             };
 
             // Push the new event to the events array
@@ -292,7 +295,7 @@ export default {
                     break
                 case 'speed':
                     //code
-                    newTitle='<i class="icon material-icons">directions_bike</i> '+this.customExerciseName
+                    newTitle='<i class="icon material-icons">bolt</i> '+this.customExerciseName
                     newClass= 'speed'
                     break
                 case 'resistance':
@@ -308,6 +311,8 @@ export default {
                 end: endTime,
                 title: newTitle,
                 class: newClass,
+                segments: this.segmentsCustomExercise,
+                duration: this.totalDurationCustomExercise,
             };
             // Push the new event to the events array
             this.events.push(newEvent);
@@ -342,9 +347,9 @@ export default {
             
             this.segmentsCustomExercise= [] // Array to store segments
             this.newSegmentCustomExercise= { // Object to hold data for the new segment
-                duracion: '',
-                pulsaciones: '',
-                cadencia: ''
+                segmentDuration: '',
+                beatsPerMinute: '',
+                cadence: ''
             },
             this.customExerciseType= 'strength'
             this.customExerciseName= ''
@@ -355,16 +360,17 @@ export default {
         },
         addSegmentCustomExercise() {
         // Push the new segment data to the segments array
+        console.log("hago push con", this.newSegmentCustomExercise.segmentDuration, this.newSegmentCustomExercise.beatsPerMinute, this.newSegmentCustomExercise.cadence)
         this.segmentsCustomExercise.push({
-            duracion: this.newSegmentCustomExercise.duracion,
-            pulsaciones: this.newSegmentCustomExercise.pulsaciones,
-            cadencia: this.newSegmentCustomExercise.cadencia
+            segmentDuration: this.newSegmentCustomExercise.segmentDuration,
+            beatsPerMinute: this.newSegmentCustomExercise.beatsPerMinute,
+            cadence: this.newSegmentCustomExercise.cadence
         });
 
         // Clear the input fields for the next segment
-        this.newSegmentCustomExercise.duracion = '';
-        this.newSegmentCustomExercise.pulsaciones = '';
-        this.newSegmentCustomExercise.cadencia = '';
+        this.newSegmentCustomExercise.segmentDuration = '';
+        this.newSegmentCustomExercise.beatsPerMinute = '';
+        this.newSegmentCustomExercise.cadence = '';
         },
         removeSegmentCustomExercise(index) {
         // Remove the segment from the array based on its index
@@ -497,7 +503,19 @@ export default {
                     <p>Inicio: {{ selectedEvent.start.toLocaleString('es', { dateStyle: 'full', timeStyle: 'short' }) }}</p>
                     <p>Fin: {{ selectedEvent.end.toLocaleString('es', { dateStyle: 'full', timeStyle: 'short' }) }}</p>
                     <!-- Display the duration of the exercise using the parseMinutes method -->
-                    <p>Duración: {{ parseMinutes((selectedEvent.end - selectedEvent.start) / 60000) }}</p>
+                    <p>Duración: {{ parseMinutes(selectedEvent.duration) }}</p>
+                    <!-- Display event segments -->
+                    <div v-if="selectedEvent.segments.length > 0">
+                        <h6>Segmentos:</h6>
+                        <ul>
+                            <li v-for="(segment, index) in selectedEvent.segments" :key="index">
+                                <p>Segmento {{ index + 1 }}:</p>
+                                <p>Duración: {{ segment.segmentDuration }} minutos</p>
+                                <p>Cadencia: {{ segment.cadence }}</p>
+                                <p>Ritmo cardíaco: {{ segment.beatsPerMinute }}</p>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <!-- Remove passing of eventId to deleteEvent -->
@@ -593,9 +611,9 @@ export default {
                         <tbody>
                             <tr v-for="(segment, index) in segmentsCustomExercise" :key="index">
                                 <th scope="row">{{ index + 1 }}</th>
-                                <td>{{ segment.duracion }} minutos</td>
-                                <td>{{ segment.pulsaciones }} por minuto</td>
-                                <td>{{ segment.cadencia }} RPM</td>
+                                <td>{{ segment.segmentDuration }} minutos</td>
+                                <td>{{ segment.beatsPerMinute }} por minuto</td>
+                                <td>{{ segment.cadence }} RPM</td>
                                 <td><button @click="removeSegmentCustomExercise(index)" class="btn btn-warning align-self-center" style="float:right"><b>X</b></button></td>
                             </tr>
                         </tbody>
@@ -607,20 +625,20 @@ export default {
                         <div class="col-12 w-25">
                             <div class="input-group">
                             <div class="input-group-text">Duracion: </div>
-                            <input v-model="newSegmentCustomExercise.duracion" type="number" class="form-control" id="duracionSegmento">
+                            <input v-model="newSegmentCustomExercise.segmentDuration" type="number" class="form-control" id="duracionSegmento">
                             <div class="input-group-text">minutos.</div>
                             </div>
                         </div>
                         <div class="col-12 w-25">
                             <div class="input-group">
                             <div class="input-group-text">Pulsaciones por minuto: </div>
-                            <input v-model="newSegmentCustomExercise.pulsaciones" type="number" class="form-control" id="pulsacionesSegmento">
+                            <input v-model="newSegmentCustomExercise.beatsPerMinute" type="number" class="form-control" id="pulsacionesSegmento">
                             </div>
                         </div>
                         <div class="col-12 w-25">
                             <div class="input-group">
                             <div class="input-group-text">Cadencia media: </div>
-                            <input v-model="newSegmentCustomExercise.cadencia" type="number" class="form-control" id="cadenciaSegmento">
+                            <input v-model="newSegmentCustomExercise.cadence" type="number" class="form-control" id="cadenciaSegmento">
                             <div class="input-group-text">RPM</div>
                             </div>
                         </div>

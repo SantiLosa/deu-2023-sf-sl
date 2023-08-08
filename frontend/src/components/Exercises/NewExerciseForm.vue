@@ -10,15 +10,15 @@
                     <fieldset class="border rounded p-2">
                         <legend>Elegir el tipo de ejercicio:</legend>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="excerciseRadio" id="strenghtRadio" value="strenght" checked>
-                            <label class="form-check-label" for="strenghtRadio">
+                            <input class="form-check-input" type="radio" name="excerciseRadio" id="strengthRadio" value="strength" checked>
+                            <label class="form-check-label" for="strengthRadio">
                                 <span class="badge text-bg-danger">
                                     <i class="icon material-icons">fitness_center</i>Fuerza</span>
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="excerciseRadio" id="cadencyRadio" value="cadency">
-                            <label class="form-check-label" for="cadencyRadio">
+                            <input class="form-check-input" type="radio" name="excerciseRadio" id="cadenceRadio" value="cadence">
+                            <label class="form-check-label" for="cadenceRadio">
                                 <span class="badge text-bg-success">
                                     <i class="icon material-icons">timer</i>Cadencia</span>
                             </label>
@@ -77,9 +77,9 @@
                 <tbody>
                     <tr v-for="(segment, index) in segments" :key="index">
                         <th scope="row">{{ index + 1 }}</th>
-                        <td>{{ segment.duracion }} minutos</td>
-                        <td>{{ segment.pulsaciones }} por minuto</td>
-                        <td>{{ segment.cadencia }} RPM</td>
+                        <td>{{ segment.segmentDuration }} minutos</td>
+                        <td>{{ segment.beatsPerMinute }} por minuto</td>
+                        <td>{{ segment.cadence }} RPM</td>
                         <td><button @click="removeSegment(index)" class="btn btn-warning align-self-center" style="float:right"><b>X</b></button></td>
                     </tr>
                 </tbody>
@@ -91,20 +91,20 @@
                 <div class="col-12 w-25">
                     <div class="input-group">
                     <div class="input-group-text">Duracion: </div>
-                    <input v-model="newSegment.duracion" type="number" class="form-control" id="duracionSegmento">
+                    <input v-model="newSegment.segmentDuration" type="number" class="form-control" id="duracionSegmento">
                     <div class="input-group-text">minutos.</div>
                     </div>
                 </div>
                 <div class="col-12 w-25">
                     <div class="input-group">
                     <div class="input-group-text">Pulsaciones por minuto: </div>
-                    <input v-model="newSegment.pulsaciones" type="number" class="form-control" id="pulsacionesSegmento">
+                    <input v-model="newSegment.beatsPerMinute" type="number" class="form-control" id="pulsacionesSegmento">
                     </div>
                 </div>
                 <div class="col-12 w-25">
                     <div class="input-group">
                     <div class="input-group-text">Cadencia media: </div>
-                    <input v-model="newSegment.cadencia" type="number" class="form-control" id="cadenciaSegmento">
+                    <input v-model="newSegment.cadence" type="number" class="form-control" id="cadenciaSegmento">
                     <div class="input-group-text">RPM</div>
                     </div>
                 </div>
@@ -138,50 +138,115 @@ export default {
     return {
       segments: [], // Array to store segments
       newSegment: { // Object to hold data for the new segment
-        duracion: '',
-        pulsaciones: '',
-        cadencia: ''
-      }
+        segmentDuration: '',
+        beatsPerMinute: '',
+        cadence: ''
+      },
+      presetExercises: []
+    }
+  },
+  created() {
+    // Retrieve data from Local Storage when the component is created
+    const savedData = localStorage.getItem('presetExercises');
+    if (savedData) {
+        this.presetExercises = JSON.parse(savedData);
     }
   },
   computed: {
     isFormValid() {
       // Check if all the required fields have values
       return (
-        this.newSegment.duracion !== '' &&
-        this.newSegment.pulsaciones !== '' &&
-        this.newSegment.cadencia !== '' &&
-        this.newSegment.duracion > 0 &&
-        this.newSegment.pulsaciones > 0 &&
-        this.newSegment.cadencia > 0
+        this.newSegment.segmentDuration !== '' &&
+        this.newSegment.beatsPerMinute !== '' &&
+        this.newSegment.cadence !== '' &&
+        this.newSegment.segmentDuration > 0 &&
+        this.newSegment.beatsPerMinute > 0 &&
+        this.newSegment.cadence > 0
       );
     },
     totalDuration() {
       // Calculate the total duration by summing up the durations of all segments
-      return this.segments.reduce((total, segment) => total + parseInt(segment.duracion), 0);
+      return this.segments.reduce((total, segment) => total + parseInt(segment.segmentDuration), 0);
     }
   },
   methods: {
     addSegment() {
       // Push the new segment data to the segments array
       this.segments.push({
-        duracion: this.newSegment.duracion,
-        pulsaciones: this.newSegment.pulsaciones,
-        cadencia: this.newSegment.cadencia
+        segmentDuration: this.newSegment.segmentDuration,
+        beatsPerMinute: this.newSegment.beatsPerMinute,
+        cadence: this.newSegment.cadence
       });
 
       // Clear the input fields for the next segment
-      this.newSegment.duracion = '';
-      this.newSegment.pulsaciones = '';
-      this.newSegment.cadencia = '';
+      this.newSegment.segmentDuration = '';
+      this.newSegment.beatsPerMinute = '';
+      this.newSegment.cadence = '';
     },
     removeSegment(index) {
       // Remove the segment from the array based on its index
       this.segments.splice(index, 1);
     },
     success() {
-        alert("Rutina nueva creada con exito")
-        this.$router.push("/ejercicio/list");
+        // Create a new exercise object with segments
+        const description = document.getElementById('descripcionRutina').value;
+        // Calculate the total duration of all segments
+        const totalDuration = this.segments.reduce((total, segment) => total + parseInt(segment.segmentDuration), 0);
+        const name = document.getElementById('nombreRutina').value;
+        var newTitle = ''
+        var newClass = ''
+        var exerciseType = ''
+        const selectedExerciseType = document.querySelector('input[name="excerciseRadio"]:checked').value;
+        switch (selectedExerciseType) {
+            case 'strength':
+                //code
+                newTitle='<i class="icon material-icons">fitness_center</i> '+name
+                newClass='strength'
+                exerciseType='Fuerza'
+                break
+            case 'cadence':
+                //code
+                newTitle= '<i class="icon material-icons">timer</i> '+name
+                newClass= 'cadence'
+                exerciseType='Cadencia'
+                break
+            case 'speed':
+                //code
+                newTitle='<i class="icon material-icons">bolt</i> '+name
+                newClass= 'speed'
+                exerciseType='Velocidad'
+                break
+            case 'resistance':
+                //code
+                newTitle='<i class="icon material-icons">directions_run</i> '+name
+                newClass= 'resistance'
+                exerciseType='Resistencia'
+                break
+        }
+      const newExercise = {
+        id: this.generateUniqueId(),
+        name: name, // Set the name from the form
+        description: description, // Set the description from the form
+        segments: this.segments,
+        duration: totalDuration,
+        title: newTitle,
+        exerciseType: exerciseType,
+        class: newClass
+      };
+
+      // Add the new exercise to the presetExercises list
+      this.presetExercises.push(newExercise);
+
+      // Save the updated presetExercises list to Local Storage
+      localStorage.setItem('presetExercises', JSON.stringify(this.presetExercises));
+
+      alert("Rutina nueva creada con exito");
+      this.$router.push("/ejercicio/list");
+    },
+    generateUniqueId() {
+      // Find the last exercise in the list and increment its ID by 1
+      const lastExercise = this.presetExercises[this.presetExercises.length - 1];
+      return lastExercise ? lastExercise.id + 1 : 1;
     },
     cancelar() {
         this.$router.push("/ejercicio/list");

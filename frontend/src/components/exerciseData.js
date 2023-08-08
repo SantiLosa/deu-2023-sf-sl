@@ -11,7 +11,7 @@ const presetExercises = [
       { segmentDuration: 15, cadence: 90, beatsPerMinute: 140 },
       { segmentDuration: 15, cadence: 95, beatsPerMinute: 145 },
     ],
-    title: '<i class="icon material-icons">directions_bike</i> Velocidad Ligero',
+    title: '<i class="icon material-icons">bolt</i> Velocidad Ligero',
     class: 'speed',
   },
   {
@@ -123,7 +123,7 @@ const presetExercises = [
       { segmentDuration: 10, cadence: 95, beatsPerMinute: 145 },
       { segmentDuration: 10, cadence: 100, beatsPerMinute: 150 },
     ],
-    title: '<i class="icon material-icons">directions_bike</i> Carrera Alterna',
+    title: '<i class="icon material-icons">bolt</i> Carrera Alterna',
     class: 'speed',
   },
   {
@@ -166,7 +166,7 @@ const presetExercises = [
       { segmentDuration: 30, cadence: 100, beatsPerMinute: 150 },
       { segmentDuration: 30, cadence: 105, beatsPerMinute: 155 },
     ],
-    title: '<i class="icon material-icons">directions_bike</i> Flash Special',
+    title: '<i class="icon material-icons">bolt</i> Flash Special',
     class: 'speed',
   },
   {
@@ -250,7 +250,7 @@ const presetExercises = [
       { segmentDuration: 20, cadence: 90, beatsPerMinute: 140 },
       { segmentDuration: 20, cadence: 95, beatsPerMinute: 145 },
     ],
-    title: '<i class="icon material-icons">directions_bike</i> Cardio Básico',
+    title: '<i class="icon material-icons">bolt</i> Cardio Básico',
     class: 'speed',
   },
   {
@@ -264,7 +264,7 @@ const presetExercises = [
       { segmentDuration: 10, cadence: 110, beatsPerMinute: 160 },
       { segmentDuration: 10, cadence: 120, beatsPerMinute: 170 },
     ],
-    title: '<i class="icon material-icons">directions_bike</i> Burst',
+    title: '<i class="icon material-icons">bolt</i> Burst',
     class: 'speed',
   },
   {
@@ -279,7 +279,7 @@ const presetExercises = [
       { segmentDuration: 25, cadence: 110, beatsPerMinute: 170 },
       { segmentDuration: 25, cadence: 115, beatsPerMinute: 175 },
     ],
-    title: '<i class="icon material-icons">directions_bike</i> Burst Intenso',
+    title: '<i class="icon material-icons">bolt</i> Burst Intenso',
     class: 'speed',
   },
 ];
