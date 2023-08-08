@@ -584,14 +584,8 @@ export default {
                             </div>
                             <!-- Display the total duration -->
                             <div class="input-group mb-3">
-                            <label for="cantidadTiempoTotal" class="input-group-text">Cantidad de tiempo total:</label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="cantidadTiempoTotal"
-                                v-model="totalDurationCustomExercise"
-                                readonly
-                            >
+                                <label for="cantidadTiempoTotal" class="input-group-text">Cantidad de tiempo total:</label>
+                                <p class="form-control" id="cantidadTiempoTotal">{{ totalDurationCustomExercise }}</p>
                             </div>
                         </div>
                     </div>
@@ -620,29 +614,29 @@ export default {
                     </table>
                     
 
-                    <!-- Input fields for adding new segment -->
-                    <div class="row row-cols-lg-auto">
-                        <div class="col-12 w-25">
+                   <!-- Input fields for adding new segment -->
+                    <div class="row mt-3">
+                        <div class="col-12 mb-2">
+                            <label for="duracionSegmento" class="form-label">Duracion:</label>
                             <div class="input-group">
-                            <div class="input-group-text">Duracion: </div>
-                            <input v-model="newSegmentCustomExercise.segmentDuration" type="number" class="form-control" id="duracionSegmento">
-                            <div class="input-group-text">minutos.</div>
+                                <input v-model="newSegmentCustomExercise.segmentDuration" type="number" class="form-control" id="duracionSegmento">
+                                <div class="input-group-text">minutos.</div>
                             </div>
                         </div>
-                        <div class="col-12 w-25">
+                        <div class="col-12 mb-2">
+                            <label for="pulsacionesSegmento" class="form-label">Pulsaciones por minuto:</label>
                             <div class="input-group">
-                            <div class="input-group-text">Pulsaciones por minuto: </div>
-                            <input v-model="newSegmentCustomExercise.beatsPerMinute" type="number" class="form-control" id="pulsacionesSegmento">
+                                <input v-model="newSegmentCustomExercise.beatsPerMinute" type="number" class="form-control" id="pulsacionesSegmento">
                             </div>
                         </div>
-                        <div class="col-12 w-25">
+                        <div class="col-12 mb-2">
+                            <label for="cadenciaSegmento" class="form-label">Cadencia media:</label>
                             <div class="input-group">
-                            <div class="input-group-text">Cadencia media: </div>
-                            <input v-model="newSegmentCustomExercise.cadence" type="number" class="form-control" id="cadenciaSegmento">
-                            <div class="input-group-text">RPM</div>
+                                <input v-model="newSegmentCustomExercise.cadence" type="number" class="form-control" id="cadenciaSegmento">
+                                <div class="input-group-text">RPM</div>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 mt-3">
                             <!-- Use :disabled to dynamically enable/disable the button -->
                             <button @click="addSegmentCustomExercise" class="btn btn-info" :disabled="!isFormValid">Agregar Segmento</button>
                         </div>
