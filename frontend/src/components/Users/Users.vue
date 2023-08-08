@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-      <h3>Users:</h3>
+      <h3>Alumnos:</h3>
       <div class="mb-3">
         <input v-model="searchQuery" type="text" class="form-control" placeholder="Busca usuarios...">
       </div>
